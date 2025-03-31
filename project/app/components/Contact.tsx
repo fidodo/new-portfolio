@@ -92,7 +92,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="text-blue-400 hover:underline"
                 >
-                  ayokunleogunfidodo.netlify.app
+                  ogunfidodoayokunle.vercel.app
                 </a>
                 ;
               </p>
