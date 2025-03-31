@@ -29,7 +29,6 @@ export default function Contact() {
     null,
   );
 
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -53,7 +52,7 @@ export default function Contact() {
         },
         body: JSON.stringify(formData),
       });
-console.log("Response:", response, formData);
+      console.log("Response:", response, formData);
       if (response.ok) {
         setSubmitStatus("success");
         setFormData({ name: "", email: "", message: "" });
@@ -66,8 +65,6 @@ console.log("Response:", response, formData);
       setIsSubmitting(false);
     }
   };
-
- 
 
   return (
     <section id="contact" className="section">

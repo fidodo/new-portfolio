@@ -7,12 +7,20 @@ const projects = [
     title: "A Delivery of Product Calculator",
     description:
       "A full-featured online shopping platform built with Next.js and Tailwind CSS",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS", "ESlint", "Prettier", "jest"],
+    tech: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "ESlint",
+      "Prettier",
+      "jest",
+    ],
     link: "https://github.com/fidodo/dopc-task",
   },
   {
     title: "Task Management App",
-    description: "A collaborative task/thoughts management tool with real-time updates",
+    description:
+      "A collaborative task/thoughts management tool with real-time updates",
     tech: ["React", "TypeScript", "Tailwind CSS", "Postgresql", "Vite"],
     link: "https://github.com/fidodo/thought-app",
   },

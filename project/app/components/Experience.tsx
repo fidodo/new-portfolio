@@ -12,7 +12,8 @@ const experiences = [
   },
   {
     title: "Full Stack Developer",
-    company: "Opiframe Full Stack -kehittäjän RekryKoulutus Oy / Tampere University ICT4N 'ICT For Need' ",
+    company:
+      "Opiframe Full Stack -kehittäjän RekryKoulutus Oy / Tampere University ICT4N 'ICT For Need' ",
     period: "2021 - 2022",
     description:
       "Built full-stack applications using various modern technologies",
