@@ -29,6 +29,17 @@ export default function Contact() {
     null,
   );
 
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -42,7 +53,7 @@ export default function Contact() {
         },
         body: JSON.stringify(formData),
       });
-
+console.log("Response:", response, formData);
       if (response.ok) {
         setSubmitStatus("success");
         setFormData({ name: "", email: "", message: "" });
@@ -56,15 +67,7 @@ export default function Contact() {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+ 
 
   return (
     <section id="contact" className="section">
@@ -87,7 +90,7 @@ export default function Contact() {
               <p>
                 website:{" "}
                 <a
-                  href="https://ayokunleogunfidodo.netlify.app"
+                  href="https://ogunfidodoayokunle.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-400 hover:underline"

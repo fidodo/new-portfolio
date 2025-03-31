@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-
+console.log("Validating email:", email, name, message);
     // Save to database
     const contactMessage = await prisma.contactMessage.create({
       data: {
