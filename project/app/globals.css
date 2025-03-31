@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #007aff;
+  --secondary: #6b7280;
+  --background: #ffffff;
+  --text: #1f2937;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #60a5fa;
+    --secondary: #9ca3af;
+    --background: #111827;
+    --text: #f3f4f6;
+  }
+}
+
+body {
+  color: var(--text);
+  background: var(--background);
+  font-family: "Inter", sans-serif;
+}
+
+.section {
+  @apply py-20 px-4 md:px-8 max-w-7xl mx-auto;
+}
+
+.heading {
+  @apply text-4xl md:text-5xl font-bold mb-8 text-center text-text;
+}
+
+.subheading {
+  @apply text-xl text-secondary mb-16 text-center max-w-2xl mx-auto;
+}
+
+.button {
+  @apply px-6 py-3 rounded-lg bg-primary text-white font-medium 
+         transition-all duration-300 hover:bg-opacity-90 
+         focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.text-secondary {
+  color: var(--secondary) !important;
+}
+
+.text-background {
+  color: var(--background) !important;
+}
+
+.text-text {
+  color: var(--text) !important;
+}
