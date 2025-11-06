@@ -6,9 +6,9 @@ const experiences = [
   {
     title: "Full Stack Web Developer (Front-end focus) and UX designer",
     company: "STR Global oy",
-    period: "2022 - Present",
+    period: "2021 - Present",
     description:
-      "Developed and maintained modern web applications using React, astrojs and Next.js",
+      "At STR Global Oy, I led full-stack feature development and UX improvements that reduced load time by 30% and supported over 50,000 users with a responsive SPA. I also built and deployed internal systems — including an OMS and WMS — that doubled operational efficiency.",
   },
   {
     title: "Full Stack Developer",
@@ -21,7 +21,7 @@ const experiences = [
   {
     title: "Web Developer & Tech enthusiast & UI/UX Designer",
     company: "Freelance",
-    period: "2015 - 2021",
+    period: "2015 - 2025",
     description: "Developed and maintained multiple client websites",
   },
 ];
