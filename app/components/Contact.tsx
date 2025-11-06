@@ -15,7 +15,7 @@ const Github = dynamic(() => import("lucide-react").then((mod) => mod.Github), {
 });
 const Linkedin = dynamic(
   () => import("lucide-react").then((mod) => mod.Linkedin),
-  { ssr: false },
+  { ssr: false }
 );
 
 export default function Contact() {
@@ -26,11 +26,11 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<null | "success" | "error">(
-    null,
+    null
   );
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -200,12 +200,13 @@ export default function Contact() {
               Message
             </label>
             <textarea
+              placeholder="Type your message here..."
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900"
               required
             ></textarea>
           </motion.div>
