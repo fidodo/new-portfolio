@@ -17,7 +17,11 @@ const skills = {
   backend: [
     { name: "Node.js", level: "Intermediate", icon: "ServerIcon" },
     { name: "GraphQL", level: "Intermediate", icon: "BeakerIcon" },
-    { name: "PostgreSQL", level: "Intermediate", icon: "DatabaseIcon" },
+    { name: "PostgreSQL", level: "Intermediate", icon: "ServerStackIcon" },
+    { name: "MongoDB", level: "Intermediate", icon: "ServerStackIcon" },
+    { name: "Firebase", level: "Intermediate", icon: "FireIcon" },
+    { name: "Express.js", level: "Intermediate", icon: "PuzzlePieceIcon" },
+    { name: "Prisma", level: "Intermediate", icon: "CubeIcon" },
   ],
   devops: [
     {
@@ -26,10 +30,17 @@ const skills = {
       icon: "ArrowPathIcon",
     },
     { name: "AWS", level: "Intermediate", icon: "CloudIcon" },
+    {
+      name: "GCP",
+      level: "Advanced",
+      icon: "CloudArrowUpIcon",
+    },
   ],
   design: [
     { name: "Figma", level: "Intermediate", icon: "PaintBrushIcon" },
     { name: "Framer", level: "Intermediate", icon: "FilmIcon" },
+    { name: "UxPilot", level: "Intermediate", icon: "CursorArrowRaysIcon" },
+    { name: "GSAP", level: "Intermediate", icon: "PlayIcon" },
   ],
 };
 
