@@ -12,6 +12,22 @@ const projects = [
     link: "https://renewal-guard.vercel.app/",
     image: "/projects/renewal-guard.png",
   },
+
+  {
+    title: "Portfolio Website",
+    description: "A modern portfolio with smooth Framer Motion animations.",
+    tech: ["Astro", "Tailwind CSS", "Framer Motion"],
+    link: "https://ogunfidodoayokunle.vercel.app/",
+    image: "/projects/portfolio.png",
+  },
+  {
+    title: "Montly Spending App",
+    description:
+      "A personal finance tracker to monitor monthly expenses and budgets.",
+    tech: ["React", "Javascript", "Bootstrap", "PostgreSQL", "recharts"],
+    link: "https://github.com/fidodo/monthly-spending",
+    image: "/projects/monthly-spending.png",
+  },
   {
     title: "Task Management App",
     description:
@@ -19,13 +35,6 @@ const projects = [
     tech: ["React", "TypeScript", "PostgreSQL", "Vite"],
     link: "https://github.com/fidodo/thought-app",
     image: "/projects/task-app.png",
-  },
-  {
-    title: "Portfolio Website",
-    description: "A modern portfolio with smooth Framer Motion animations.",
-    tech: ["Astro", "Tailwind CSS", "Framer Motion"],
-    link: "https://ogunfidodoayokunle.vercel.app/",
-    image: "/projects/ogunfidodoayokunle.png",
   },
 ];
 
