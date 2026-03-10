@@ -29,10 +29,10 @@ const skills = {
       level: "Intermediate",
       icon: "ArrowPathIcon",
     },
-    { name: "AWS", level: "Intermediate", icon: "CloudIcon" },
+    { name: "AWS", level: "Beginner", icon: "CloudIcon" },
     {
       name: "GCP",
-      level: "Advanced",
+      level: "Beginner",
       icon: "CloudArrowUpIcon",
     },
   ],
