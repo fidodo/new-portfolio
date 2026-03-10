@@ -45,7 +45,7 @@ export default function Projects() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="max-w-5xl mx-auto"
+        className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 border-white/20"
       >
         <h2 className="heading">Featured Projects</h2>
         <p className="subheading">Some of my recent work</p>

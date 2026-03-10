@@ -43,13 +43,13 @@ export default function Navigation() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed w-full z-50 transition-all duration-300 ${
+      className={`fixed w-full z-50 transition-all duration-300 border-white/20 border-b ${
         isScrolled
           ? "bg-white/80 backdrop-blur-sm shadow-lg dark:bg-gray-900/80"
           : ""
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex items-center justify-between h-16">
           <span className="text-xl font-bold text-text">
             Ayokunle Ogunfidodo

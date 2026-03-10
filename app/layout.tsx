@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Ayokunle Ogunfidodo's - Portfolio",
+  metadataBase: new URL("https://ogunfidodoayokunle.vercel.app/"),
   description: "Personal portfolio showcasing my projects and skills",
   openGraph: {
     images: ["/og-image.png"],
