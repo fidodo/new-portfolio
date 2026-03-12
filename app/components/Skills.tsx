@@ -65,7 +65,7 @@ export default function Skills() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
-              className="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
+              className="p-5 bg-card dark:bg-[#1a1a1a] rounded-xl shadow-md border border-border dark:border-[#2a2a2a]"
             >
               <h3 className="text-lg font-semibold text-primary mb-4 capitalize">
                 {category}

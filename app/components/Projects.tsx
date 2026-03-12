@@ -57,7 +57,7 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              className="p-5 bg-card dark:bg-[#1a1a1a] rounded-xl shadow-md border border-border dark:border-[#2a2a2a]"
             >
               <div className="relative w-full h-48 md:h-56">
                 <Image
@@ -73,7 +73,7 @@ export default function Projects() {
                 <h3 className="text-xl font-semibold text-primary mb-2">
                   {project.title}
                 </h3>
-                <p className="text-secondary mb-4">{project.description}</p>
+                <p className="text-gray-300 mb-4">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.tech.map((tech) => (
                     <span
