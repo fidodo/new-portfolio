@@ -15,7 +15,7 @@ const Github = dynamic(() => import("lucide-react").then((mod) => mod.Github), {
 });
 const Linkedin = dynamic(
   () => import("lucide-react").then((mod) => mod.Linkedin),
-  { ssr: false }
+  { ssr: false },
 );
 
 export default function Contact() {
@@ -26,11 +26,11 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<null | "success" | "error">(
-    null
+    null,
   );
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -76,21 +76,21 @@ export default function Contact() {
       >
         <h2 className="heading">Get in Touch</h2>
 
-        <div className="bg-gray-900 p-6 rounded-lg font-mono text-gray-100 overflow-x-auto">
+        <div className="bg-[#2c1f1a] p-6 rounded-lg font-mono text-[#eae2d7] overflow-x-auto border border-[#8b5e4c]/20">
           <p>
-            <span className="text-purple-400">.socials</span> &#123;
+            <span className="text-[#c97e5d]">.socials</span> &#123;
           </p>
 
           <div className="ml-4 mt-2 space-y-2">
             <div className="flex items-center">
-              <Globe className="h-5 w-5 mr-2 text-blue-400" />
+              <Globe className="h-5 w-5 mr-2 text-[#c97e5d]" />
               <p>
                 website:{" "}
                 <a
                   href="https://ogunfidodoayokunle.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline"
+                  className="text-[#e6b89c] hover:underline hover:text-[#f0d5c0] transition-colors"
                 >
                   ogunfidodoayokunle.vercel.app
                 </a>
@@ -99,12 +99,12 @@ export default function Contact() {
             </div>
 
             <div className="flex items-center">
-              <Mail className="h-5 w-5 mr-2 text-red-400" />
+              <Mail className="h-5 w-5 mr-2 text-[#c97e5d]" />
               <p>
                 email:{" "}
                 <a
                   href="mailto:ayokunleogunfidodo@gmail.com"
-                  className="text-blue-400 hover:underline"
+                  className="text-[#e6b89c] hover:underline hover:text-[#f0d5c0] transition-colors"
                 >
                   ayokunleogunfidodo@gmail.com
                 </a>
@@ -113,14 +113,14 @@ export default function Contact() {
             </div>
 
             <div className="flex items-center">
-              <Github className="h-5 w-5 mr-2 text-gray-400" />
+              <Github className="h-5 w-5 mr-2 text-[#c97e5d]/70" />
               <p>
                 github:{" "}
                 <a
                   href="https://github.com/Fidodo"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline"
+                  className="text-[#e6b89c] hover:underline hover:text-[#f0d5c0] transition-colors"
                 >
                   Fidodo
                 </a>
@@ -129,14 +129,14 @@ export default function Contact() {
             </div>
 
             <div className="flex items-center">
-              <Linkedin className="h-5 w-5 mr-2 text-blue-500" />
+              <Linkedin className="h-5 w-5 mr-2 text-[#c97e5d]" />
               <p>
                 linkedin:{" "}
                 <a
                   href="https://www.linkedin.com/in/ayokunle-ogunfidodo-a862a0153/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline"
+                  className="text-[#e6b89c] hover:underline hover:text-[#f0d5c0] transition-colors"
                 >
                   ayokunle-ogunfidodo-a862a0153
                 </a>
