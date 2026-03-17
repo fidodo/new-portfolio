@@ -175,6 +175,8 @@ h6 {
   @apply text-xl text-secondary mb-16 text-center max-w-2xl mx-auto;
   line-height: 1.6;
   font-weight: 400;
+  text-decoration: none;
+  position: relative;
 }
 
 .button {
@@ -323,4 +325,15 @@ select:focus {
 }
 .bg-secondary {
   background: var(--secondary);
+}
+
+.subheading::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transition: transform 0.3s ease;
 }
