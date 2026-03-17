@@ -42,7 +42,7 @@ const projects = [
       "A full-stack CMS e-commerce platform with product listings and cart functionality.",
     tech: ["Next.js", "Javascript", "Tailwind CSS", "MongoDB"],
     link: "https://github.com/fidodo/Bouyantech",
-    image: "/projects/bouyantech.png",
+    image: "/projects/Bouyantech.png",
     status: "In Progress",
   },
 ];
@@ -102,12 +102,14 @@ export default function Projects() {
                   View Project →
                 </a>
               </div>
-              <button
-                className="px-3 py-1 bg-primary text-secondary rounded-full text-sm"
-                disabled
-              >
-                {project?.status}
-              </button>
+              {project.status && (
+                <button
+                  className="px-3 py-1 bg-primary text-secondary rounded-full text-sm"
+                  disabled
+                >
+                  {project?.status}
+                </button>
+              )}
             </motion.div>
           ))}
         </div>
