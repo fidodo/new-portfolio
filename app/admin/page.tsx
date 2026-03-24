@@ -1,6 +1,6 @@
 // app/admin/page.tsx
 "use client";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function AdminPage() {
@@ -68,7 +68,9 @@ export default function AdminPage() {
         setTitle("");
         setContent("");
         setTimeout(() => setStatus(""), 3000);
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 1500);
       } else {
         setStatus("Error saving post");
         console.error("Error saving post:", data);
