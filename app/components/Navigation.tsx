@@ -2,7 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Home, User, Code2, FolderGit2, Briefcase, Mail } from "lucide-react";
+import {
+  Home,
+  User,
+  Code2,
+  FolderGit2,
+  Briefcase,
+  Mail,
+  Globe,
+} from "lucide-react";
 
 export default function Navigation() {
   const [activeSection, setActiveSection] = useState("home");
@@ -38,6 +46,7 @@ export default function Navigation() {
     { id: "projects", label: "Projects", icon: FolderGit2 },
     { id: "experience", label: "Experience", icon: Briefcase },
     { id: "contact", label: "Contact", icon: Mail },
+    { id: "blog", label: "Blog", icon: Globe },
   ];
 
   return (
@@ -58,7 +67,7 @@ export default function Navigation() {
               Ayokunle Ogunfidodo
             </span>
             <div className="flex items-center space-x-4">
-              {navItems.map(({ id, label }) => (
+              {navItems.map(({ id, label, icon: Icon }) => (
                 <a
                   key={id}
                   href={`#${id}`}
@@ -69,7 +78,7 @@ export default function Navigation() {
                         : "text-text hover:text-primary"
                     }`}
                 >
-                  {label}
+                  {<Icon size={20} />} {label}
                 </a>
               ))}
             </div>
