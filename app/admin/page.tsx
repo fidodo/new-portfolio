@@ -1,6 +1,6 @@
 // app/admin/page.tsx
 "use client";
-
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function AdminPage() {
@@ -9,6 +9,8 @@ export default function AdminPage() {
   const [status, setStatus] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,16 +60,22 @@ export default function AdminPage() {
         body: JSON.stringify({ title, content }),
       });
 
+      const data = await response.json();
+      console.log("Response from API:", data);
+
       if (response.ok) {
         setStatus("Saved successfully!");
         setTitle("");
         setContent("");
         setTimeout(() => setStatus(""), 3000);
+        router.push("/");
       } else {
         setStatus("Error saving post");
+        console.error("Error saving post:", data);
       }
     } catch (error) {
       setStatus("Error saving post");
+      console.error("Error saving post:", error);
     }
   };
 
