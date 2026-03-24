@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
-    "@prisma/client": "6.19.0",
+    "@prisma/client": "^6.19.0",
     "@types/node": "20.6.2",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "eslint": "8.49.0",
-    "eslint-config-next": "14.2.35",
+    "eslint-config-next": "13.5.1",
     "framer-motion": "^10.18.0",
     "gsap": "^3.12.2",
     "lucide-react": "^0.485.0",
@@ -32,5 +32,7 @@
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prisma": "^6.19.0"
+  }
 }
