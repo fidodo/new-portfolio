@@ -9,13 +9,13 @@ export async function GET() {
     const posts = await prisma.blogPost.findMany({
       orderBy: { createdAt: "desc" },
     });
-    return NextResponse.json(posts);
+
+    // Always return an array, even if empty
+    return NextResponse.json(posts || []);
   } catch (error) {
     console.error("Error fetching blog posts:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch blog posts" },
-      { status: 500 },
-    );
+    // Return an empty array instead of an error object
+    return NextResponse.json([], { status: 200 });
   } finally {
     await prisma.$disconnect();
   }
@@ -26,7 +26,6 @@ export async function POST(request: Request) {
     const { title, content } = await request.json();
     console.log("Received blog post:", { title, content });
 
-    // Basic validation
     if (!title || !content) {
       return NextResponse.json(
         { error: "Title and content are required" },
@@ -34,12 +33,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Save to database
     const blogPost = await prisma.blogPost.create({
-      data: {
-        title,
-        content,
-      },
+      data: { title, content },
     });
 
     return NextResponse.json(blogPost, { status: 201 });

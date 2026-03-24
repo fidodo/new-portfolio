@@ -15,6 +15,7 @@ interface BlogPost {
 const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [editTitle, setEditTitle] = useState("");
@@ -26,11 +27,29 @@ const Blog = () => {
 
   const fetchPosts = async () => {
     try {
+      setLoading(true);
+      setError(null);
+
       const response = await fetch("/api/blog");
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      setPosts(data);
+
+      // Ensure data is an array
+      if (Array.isArray(data)) {
+        setPosts(data);
+      } else {
+        console.error("API did not return an array:", data);
+        setPosts([]);
+        setError("Received invalid data from server");
+      }
     } catch (error) {
       console.error("Error fetching posts:", error);
+      setError("Failed to load blog posts");
+      setPosts([]);
     } finally {
       setLoading(false);
     }
@@ -49,7 +68,8 @@ const Blog = () => {
       if (response.ok) {
         setPosts(posts.filter((post) => post.id !== id));
       } else {
-        alert("Failed to delete post");
+        const error = await response.json();
+        alert(error.error || "Failed to delete post");
       }
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -78,16 +98,16 @@ const Blog = () => {
       });
 
       if (response.ok) {
+        const updatedPost = await response.json();
         setPosts(
           posts.map((post) =>
-            post.id === editingPost.id
-              ? { ...post, title: editTitle, content: editContent }
-              : post,
+            post.id === editingPost.id ? updatedPost : post,
           ),
         );
         setEditingPost(null);
       } else {
-        alert("Failed to update post");
+        const error = await response.json();
+        alert(error.error || "Failed to update post");
       }
     } catch (error) {
       console.error("Error updating post:", error);
@@ -102,6 +122,27 @@ const Blog = () => {
       year: "numeric",
     });
   };
+
+  if (error) {
+    return (
+      <section id="blog" className="section">
+        <div className="flex flex-col relative min-h-screen text-center items-center justify-center">
+          <h3 className="absolute top-24 uppercase tracking-[20px] text-gray-500 text-2xl">
+            Dev Log
+          </h3>
+          <div className="text-center">
+            <p className="text-red-500 mb-4">{error}</p>
+            <button
+              onClick={fetchPosts}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="blog" className="section">
@@ -144,7 +185,6 @@ const Blog = () => {
                         <span className="text-sm text-gray-500">
                           {formatDate(post.createdAt)}
                         </span>
-                        {/* Edit and Delete Buttons */}
                         <div className="flex gap-1 ml-2">
                           <button
                             onClick={() => handleEdit(post)}
