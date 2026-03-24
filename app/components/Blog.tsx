@@ -162,7 +162,7 @@ const Blog = () => {
           ) : posts.length === 0 ? (
             <div className="text-center">
               <h4 className="text-4xl font-semibold mb-4">
-                Starting my development journey! 🚀
+                Blogging my development journey! 🚀
               </h4>
               <p className="text-gray-500">
                 I&apos;ll be documenting my progress here as I build and learn.
