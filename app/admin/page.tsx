@@ -13,7 +13,7 @@ export default function AdminPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password === "Mayo101315@") {
+    if (password === process.env.password) {
       setIsAuthenticated(true);
     } else {
       alert("Wrong password");
