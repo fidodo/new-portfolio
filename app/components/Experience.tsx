@@ -4,25 +4,36 @@ import { motion } from "framer-motion";
 
 const experiences = [
   {
-    title: "Full Stack Web Developer (Front-end focus) and UX designer",
-    company: "STR Global oy",
+    title: "Full Stack Web Developer (Front-end focus) & UX Designer",
+    company: "STR Global Oy",
     period: "2021 - January 2026",
     description:
-      "At STR Global Oy, I led full-stack feature development and UX improvements that reduced load time by 30% and supported over 50,000 users with a responsive SPA. I also built and deployed internal systems — including an OMS and WMS — that doubled operational efficiency.",
+      "Led full-stack feature development and UX improvements that reduced load times by 30% and supported over 50,000 users through responsive SPA architectures. Built and deployed internal operational systems, including OMS and WMS platforms, improving workflow efficiency by 2×.",
   },
+
+  {
+    title: "Innovation Program Participant & Frontend Developer",
+    company: "Kasvuhuoneilmiö × AhlmanEdu",
+    period: "2026 (5-week program)",
+    description:
+      "Collaborated in a multidisciplinary team to design community-focused digital and physical experiences for AhlmanEdu campus initiatives. Applied frontend development, UX thinking, and innovation strategy to rapid ideation and prototyping. Built a CMS-driven platform using React and Strapi while contributing to stakeholder presentations and human-centered solution development.",
+  },
+
   {
     title: "Full Stack Developer",
     company:
-      "Opiframe Full Stack -kehittäjän RekryKoulutus Oy / Tampere University ICT4N 'ICT For Need' ",
+      "Opiframe Full Stack -kehittäjän RekryKoulutus Oy / Tampere University ICT4N (ICT For Need)",
     period: "2021 - 2022",
     description:
-      "Built full-stack applications using various modern technologies",
+      "Developed full-stack applications and research tools using modern web technologies, focusing on usability, accessibility, and scalable frontend architecture.",
   },
+
   {
-    title: "Web Developer & Tech enthusiast & UI/UX Designer",
+    title: "Web Developer, Tech Enthusiast & UI/UX Designer",
     company: "Freelance",
     period: "2015 - Present",
-    description: "Developed and maintained multiple client websites",
+    description:
+      "Designed and developed websites and digital products for clients using React, Next.js, Astro, and modern frontend technologies, with a strong focus on responsive design, performance, and user experience.",
   },
 ];
 

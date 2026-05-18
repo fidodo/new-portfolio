@@ -13,6 +13,7 @@ const skills = {
     { name: "Vite", level: "Advanced", icon: "BoltIcon" },
     { name: "GSAP", level: "Intermediate", icon: "PlayIcon" },
     { name: "SCSS", level: "Intermediate", icon: "SparklesIcon" },
+    { name: "JavaScript", level: "Advanced", icon: "CodeBracketIcon" },
   ],
   backend: [
     { name: "Node.js", level: "Intermediate", icon: "ServerIcon" },
@@ -22,6 +23,8 @@ const skills = {
     { name: "Firebase", level: "Intermediate", icon: "FireIcon" },
     { name: "Express.js", level: "Intermediate", icon: "PuzzlePieceIcon" },
     { name: "Prisma", level: "Intermediate", icon: "CubeIcon" },
+    { name: "Strapi", level: "Intermediate", icon: "CubeIcon" },
+    { name: "flask", level: "Beginner", icon: "ServerIcon" },
   ],
   devops: [
     {
