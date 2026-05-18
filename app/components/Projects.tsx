@@ -115,7 +115,7 @@ const PROJECTS: readonly Project[] = [
     description:
       "A full-stack CMS e-commerce platform with product listings and cart functionality.",
     tech: ["Next.js", "Javascript", "Tailwind CSS", "MongoDB"] as const,
-    link: "bouyantech.vercel.app",
+    link: "https://bouyantech.vercel.app/",
     image: "/projects/Bouyantech.webp",
     github: "https://github.com/fidodo/Bouyantech",
     status: "In Progress",
