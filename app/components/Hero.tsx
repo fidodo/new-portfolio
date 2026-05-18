@@ -33,17 +33,17 @@ export default function Hero() {
       id="home"
       className="section min-h-screen flex items-center justify-center"
     >
-      <div className="text-center">
+      <div className="text-center max-w-4xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.8,
-            staggerChildren: 0.2, // For sequential child animations
+            staggerChildren: 0.2,
           }}
         >
           <motion.h1
-            className="text-5xl md:text-7xl font-bold mb-6"
+            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -52,20 +52,38 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p
-            className="text-xl md:text-2xl text-primary mb-8"
+            className="text-xl md:text-2xl text-primary mb-6 font-medium"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Full Stack Developer | UI/UX Enthusiast | Problem Solver
+            Full Stack Frontend focusDeveloper • Frontend Engineer • UI/UX
+            Enthusiast
           </motion.p>
-          <div className="flex justify-center gap-4">
+
+          <motion.p
+            className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            I build scalable, human-centered digital experiences using React,
+            Next.js, TypeScript, and modern frontend technologies. Passionate
+            about combining clean engineering, UX thinking, innovation, and
+            interactive design to create meaningful products.
+          </motion.p>
+
+          <motion.div
+            className="flex justify-center gap-4 flex-wrap"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             <a href="#projects" className="button">
               View My Work
             </a>
+
             <a href="#contact" className="button">
               Get in Touch
             </a>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
