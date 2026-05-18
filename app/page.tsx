@@ -18,29 +18,36 @@ export default function Home() {
   const mainRef = useRef(null);
 
   useEffect(() => {
-    // Initialize GSAP animations with modified settings
-    const sections = gsap.utils.toArray(".section");
-    sections.forEach((section: any) => {
-      gsap.fromTo(
-        section,
-        {
-          opacity: 0.5, // Start from partial opacity
-          y: 30,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            end: "top 20%",
-            toggleActions: "play none none none", // Changed from 'play none none reverse'
-            once: true, // Animation plays only once
+    const ctx = gsap.context(() => {
+      const sections = gsap.utils.toArray(".section");
+
+      sections.forEach((section: any) => {
+        gsap.fromTo(
+          section,
+          {
+            opacity: 0.5,
+            y: 30,
           },
-        },
-      );
-    });
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              end: "top 20%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+          },
+        );
+      });
+    }, mainRef);
+
+    return () => {
+      ctx.revert(); // Cleans up GSAP animations
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Kills ScrollTriggers
+    };
   }, []);
 
   return (

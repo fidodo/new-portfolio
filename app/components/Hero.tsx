@@ -9,6 +9,7 @@ export default function Hero() {
   const subtitleRef = useRef(null);
 
   useEffect(() => {
+    if (!titleRef.current || !subtitleRef.current) return;
     const tl = gsap.timeline();
     tl.from(titleRef.current, {
       opacity: 0,
