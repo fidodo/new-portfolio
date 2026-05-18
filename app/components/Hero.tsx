@@ -65,10 +65,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Built and enhanced internal OMS and WMS applications with a
-            frontend-focused full-stack approach, improving operational
-            efficiency, interface responsiveness, and overall user experience
-            for internal teams and business operations.,
+            I build scalable, human-centered digital experiences using React,
+            Next.js, TypeScript, and modern frontend technologies. Passionate
+            about combining clean engineering, UX thinking, innovation, and
+            interactive design to create meaningful products.
           </motion.p>
 
           <motion.div

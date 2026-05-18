@@ -8,7 +8,7 @@ const experiences = [
     company: "STR Global Oy",
     period: "2021 - January 2026",
     description:
-      "Led full-stack feature development and UX improvements that reduced load times by 30% and supported over 50,000 users through responsive SPA architectures. Built and deployed internal operational systems, including OMS and WMS platforms, improving workflow efficiency by 2×.",
+      "Built and enhanced internal OMS and WMS applications with a frontend-focused full-stack approach, improving operational efficiency, interface responsiveness, and overall user experience for internal teams and business operations.",
   },
 
   {
