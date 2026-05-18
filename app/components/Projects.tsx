@@ -14,6 +14,7 @@ import {
   SiAstro,
   SiFramer,
   SiMongodb,
+  SiStrapi,
 } from "react-icons/si";
 import { TbBrandFramer } from "react-icons/tb";
 
@@ -39,6 +40,7 @@ const techIcons: TechIcons = {
   Astro: SiAstro,
   "Framer Motion": TbBrandFramer,
   MongoDB: SiMongodb,
+  Strapi: SiStrapi,
 };
 
 // Tech colors for badges
@@ -71,7 +73,7 @@ const projects = [
     description: "A modern portfolio with smooth Framer Motion animations.",
     tech: ["Astro", "Tailwind CSS", "Framer Motion"],
     link: "https://ogunfidodoayokunle.vercel.app/",
-    image: "/projects/portfolio.png",
+    image: "/projects/portfolio.webp",
   },
   {
     title: "Montly Spending App",
@@ -97,8 +99,18 @@ const projects = [
       "A full-stack CMS e-commerce platform with product listings and cart functionality.",
     tech: ["Next.js", "JavaScript", "Tailwind CSS", "MongoDB"],
     link: "https://github.com/fidodo/Bouyantech",
-    image: "/projects/Bouyantech.png",
+    image: "/projects/Bouyantech.webp",
     github: "https://github.com/fidodo/Bouyantech",
+    status: "In Progress",
+  },
+  {
+    title: "AlhmanEdu Green Fields",
+    description:
+      "A blog platform built with Strapi CMS, Next.js, and Tailwind CSS.",
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Strapi"],
+    link: "https://greenfileds-alhman.vercel.app/#home",
+    image: "/projects/greenfields.webp",
+    github: "https://github.com/fidodo/greenfileds_alhman",
     status: "In Progress",
   },
 ];
