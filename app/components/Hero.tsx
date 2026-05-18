@@ -56,7 +56,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Full Stack Frontend focusDeveloper • Frontend Engineer • UI/UX
+            Frontend Focused Full Stack Developer • Frontend Engineer • UI/UX
             Enthusiast
           </motion.p>
 
