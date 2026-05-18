@@ -109,9 +109,8 @@ const projects = [
   },
   {
     title: "AlhmanEdu Green Fields",
-    description:
-      "A blog platform built with Strapi CMS, Next.js, and Tailwind CSS.",
-    tech: ["React", "TypeScript", "JavaScript", "Scss", "Strapi"],
+    description: "A blog platform built with Strapi CMS in backend, React.",
+    tech: ["React", "TypeScript", "JavaScript", "Strapi"],
     link: "https://greenfileds-alhman.vercel.app/#home",
     image: "/projects/greenfields.webp",
     github: "https://github.com/fidodo/greenfileds_alhman",
