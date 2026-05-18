@@ -15,6 +15,7 @@ import {
   SiFramer,
   SiMongodb,
   SiStrapi,
+  SiPostcss,
 } from "react-icons/si";
 import { TbBrandFramer } from "react-icons/tb";
 
@@ -41,6 +42,7 @@ const techIcons: TechIcons = {
   "Framer Motion": TbBrandFramer,
   MongoDB: SiMongodb,
   Strapi: SiStrapi,
+  Scss: SiPostcss,
 };
 
 // Tech colors for badges
@@ -57,6 +59,8 @@ const techColors: TechColors = {
   Astro: "#BC52EE",
   "Framer Motion": "#0055FF",
   MongoDB: "#47A248",
+  Strapi: "#D53F8C",
+  Scss: "#CB6699",
 };
 
 const projects = [
@@ -107,7 +111,7 @@ const projects = [
     title: "AlhmanEdu Green Fields",
     description:
       "A blog platform built with Strapi CMS, Next.js, and Tailwind CSS.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Strapi"],
+    tech: ["React", "TypeScript", "JavaScript", "Scss", "Strapi"],
     link: "https://greenfileds-alhman.vercel.app/#home",
     image: "/projects/greenfields.webp",
     github: "https://github.com/fidodo/greenfileds_alhman",
