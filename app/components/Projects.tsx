@@ -64,6 +64,7 @@ const TECH_CONFIG: Record<string, TechConfig> = {
 const PROJECTS: readonly Project[] = [
   {
     id: "renewal-guard",
+
     title: "Renewal Guard",
     description:
       "A license renewal tracker built with Next.js and Tailwind CSS.",
