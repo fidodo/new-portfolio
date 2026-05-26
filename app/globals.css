@@ -353,3 +353,185 @@ select:focus {
     -webkit-line-clamp: 2;
   }
 }
+
+/* Blog-specific improvements */
+.blog-post {
+  /* Typography improvements */
+  font-size: 1.125rem; /* 18px - better for reading */
+  line-height: 1.8;
+  letter-spacing: -0.003em;
+  font-weight: 400;
+}
+
+/* Blog content styling */
+.prose {
+  max-width: 75ch; /* Optimal line length for readability */
+  margin: 0 auto;
+}
+
+.prose h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.prose h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose p {
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+}
+
+.prose ul,
+.prose ol {
+  margin: 1.25rem 0;
+  padding-left: 2rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--primary);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+
+.prose code {
+  background: var(--muted);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+  font-family: "Courier New", monospace;
+}
+
+.prose pre {
+  background: var(--muted);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.prose img {
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  width: 100%;
+  height: auto;
+}
+
+.prose a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.prose a:hover {
+  border-bottom-color: var(--primary);
+}
+
+/* Blog card improvements */
+.blog-card {
+  background: var(--card);
+  border-radius: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border-color: var(--primary);
+}
+
+/* Read more button */
+.read-more-btn {
+  background: transparent;
+  color: var(--primary);
+  padding: 0.5rem 0;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.read-more-btn:hover {
+  gap: 0.75rem;
+  color: var(--primary);
+}
+
+/* Blog meta information */
+.blog-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+}
+
+/* Dark mode specific adjustments */
+.dark .blog-card {
+  background: rgba(30, 30, 35, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.dark .prose blockquote {
+  border-left-color: var(--primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.dark .prose code {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Improved line clamping */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth height transition for expanded content */
+.blog-content {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Reading progress indicator (optional) */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary);
+  transform-origin: 0%;
+  z-index: 1000;
+}

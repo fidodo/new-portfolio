@@ -20,10 +20,28 @@ const Blog = () => {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
+  const [readingProgress, setReadingProgress] = useState(0);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const current = window.scrollY;
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const progress = (current / maxScroll) * 100;
+      setReadingProgress(progress);
+    };
+
+    window.addEventListener("scroll", updateProgress);
+    return () => window.removeEventListener("scroll", updateProgress);
+  }, []);
 
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  <div
+    className="reading-progress"
+    style={{ transform: `scaleX(${readingProgress / 100})` }}
+  />;
 
   const fetchPosts = async () => {
     try {
@@ -176,19 +194,39 @@ const Blog = () => {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+                  className="blog-card"
                 >
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-semibold">{post.title}</h3>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500">
+                  <div className="p-6 md:p-8">
+                    {/* Header with better spacing */}
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                      <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
+                        {post.title}
+                      </h3>
+
+                      <div className="flex items-center gap-3">
+                        {/* Date with better styling */}
+                        <span className="blog-meta !mb-0">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
                           {formatDate(post.createdAt)}
                         </span>
-                        <div className="flex gap-1 ml-2">
+
+                        {/* Admin actions (only visible to admin) */}
+                        <div className="flex gap-1">
                           <button
                             onClick={() => handleEdit(post)}
-                            className="p-1 text-gray-400 hover:text-blue-500 transition-colors"
+                            className="p-2 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
                             aria-label="Edit post"
                           >
                             <svg
@@ -207,7 +245,7 @@ const Blog = () => {
                           </button>
                           <button
                             onClick={() => handleDelete(post.id)}
-                            className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                            className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
                             aria-label="Delete post"
                           >
                             <svg
@@ -228,26 +266,96 @@ const Blog = () => {
                       </div>
                     </div>
 
+                    {/* Content with improved readability */}
                     <div
-                      className={`prose dark:prose-invert max-w-none cursor-pointer ${expandedPost === post.id ? "" : "line-clamp-3"}`}
+                      className={`prose prose-lg dark:prose-invert max-w-none blog-content
+            ${expandedPost === post.id ? "" : "line-clamp-3"}`}
                       onClick={() =>
                         setExpandedPost(
                           expandedPost === post.id ? null : post.id,
                         )
                       }
                     >
-                      <ReactMarkdown>{post.content}</ReactMarkdown>
+                      <ReactMarkdown
+                        components={{
+                          // Custom markdown rendering for better UX
+                          p: ({ children }) => (
+                            <p className="leading-relaxed">{children}</p>
+                          ),
+                          h1: ({ children }) => (
+                            <h1 className="text-3xl font-bold mt-8 mb-4">
+                              {children}
+                            </h1>
+                          ),
+                          h2: ({ children }) => (
+                            <h2 className="text-2xl font-bold mt-6 mb-3">
+                              {children}
+                            </h2>
+                          ),
+                          h3: ({ children }) => (
+                            <h3 className="text-xl font-semibold mt-5 mb-2">
+                              {children}
+                            </h3>
+                          ),
+                          ul: ({ children }) => (
+                            <ul className="list-disc pl-6 my-4 space-y-2">
+                              {children}
+                            </ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol className="list-decimal pl-6 my-4 space-y-2">
+                              {children}
+                            </ol>
+                          ),
+                          li: ({ children }) => (
+                            <li className="leading-relaxed">{children}</li>
+                          ),
+                          blockquote: ({ children }) => (
+                            <blockquote className="border-l-4 border-primary pl-5 my-6 italic text-muted-foreground">
+                              {children}
+                            </blockquote>
+                          ),
+                          code: ({ children }) => (
+                            <code className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono">
+                              {children}
+                            </code>
+                          ),
+                          pre: ({ children }) => (
+                            <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-6">
+                              {children}
+                            </pre>
+                          ),
+                        }}
+                      >
+                        {post.content}
+                      </ReactMarkdown>
                     </div>
 
+                    {/* Improved read more button */}
                     <button
                       onClick={() =>
                         setExpandedPost(
                           expandedPost === post.id ? null : post.id,
                         )
                       }
-                      className="mt-4 text-blue-500 hover:text-blue-600 text-sm font-medium"
+                      className="read-more-btn mt-6"
                     >
-                      {expandedPost === post.id ? "Show less ↑" : "Read more ↓"}
+                      <span>
+                        {expandedPost === post.id ? "Show less" : "Read more"}
+                      </span>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${expandedPost === post.id ? "rotate-180" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
                     </button>
                   </div>
                 </motion.div>
