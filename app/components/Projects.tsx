@@ -63,6 +63,15 @@ const TECH_CONFIG: Record<string, TechConfig> = {
 
 const PROJECTS: readonly Project[] = [
   {
+    id: "portfolio",
+    title: "Portfolio Website",
+    description: "A modern portfolio with smooth Framer Motion animations.",
+    tech: ["Astro", "Tailwind CSS", "Framer Motion"] as const,
+    link: "https://ogunfidodoayokunle.vercel.app/",
+    image: "/projects/portfolio.webp",
+    year: 2024,
+  },
+  {
     id: "renewal-guard",
 
     title: "Renewal Guard",
@@ -74,42 +83,24 @@ const PROJECTS: readonly Project[] = [
     year: 2024,
   },
   {
-    id: "portfolio",
-    title: "Portfolio Website",
-    description: "A modern portfolio with smooth Framer Motion animations.",
-    tech: ["Astro", "Tailwind CSS", "Framer Motion"] as const,
-    link: "https://ogunfidodoayokunle.vercel.app/",
-    image: "/projects/portfolio.webp",
-    year: 2024,
-  },
-  {
-    id: "monthly-spending",
-    title: "Monthly Spending App",
+    id: "spending-tracker",
+    title: "Spending Tracker App",
     description:
-      "A personal finance tracker to monitor monthly expenses and budgets.",
+      "A personal finance tracker to monitor monthly expenses, loans, bills and budgets.",
     tech: [
       "React",
       "Javascript",
       "Bootstrap",
       "PostgreSQL",
-      "recharts",
+      "react-charts",
+      "tesseract.js",
     ] as const,
-    link: "https://github.com/fidodo/monthly-spending",
-    image: "/projects/monthly-spending.png",
-    github: "https://github.com/fidodo/monthly-spending",
+    link: "https://github.com/fidodo/spending-tracker",
+    image: "/projects/monthly-spending.webp",
+    github: "https://github.com/fidodo/spending-tracker",
     year: 2023,
   },
-  {
-    id: "task-management",
-    title: "Task Management App",
-    description:
-      "A collaborative task manager with real-time sync and clean UI.",
-    tech: ["React", "TypeScript", "PostgreSQL", "Vite"] as const,
-    link: "https://github.com/fidodo/thought-app",
-    image: "/projects/task-app.png",
-    github: "https://github.com/fidodo/thought-app",
-    year: 2023,
-  },
+
   {
     id: "ecommerce",
     title: "E-commerce Store",
