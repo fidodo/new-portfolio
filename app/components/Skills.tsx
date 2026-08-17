@@ -45,6 +45,35 @@ const skills = {
     { name: "UxPilot", level: "Intermediate", icon: "CursorArrowRaysIcon" },
     { name: "GSAP", level: "Intermediate", icon: "PlayIcon" },
   ],
+  "Ai/ML": [
+    {
+      name: "OpenAI API",
+      level: "Intermediate",
+      icon: "ChatBubbleLeftRightIcon",
+    },
+    {
+      name: "Prompt Engineering",
+      level: "intermediate",
+      icon: "ChatBubbleLeftRightIcon",
+    },
+    {
+      name: "Hugging Face",
+      level: "intermediate",
+      icon: "ChatBubbleLeftRightIcon",
+    },
+    {
+      name: "LangChain",
+      level: "intermediate",
+      icon: "ChatBubbleLeftRightIcon",
+    },
+    {
+      name: "LLMOps",
+      level: "intermediate",
+      icon: "ChatBubbleLeftRightIcon",
+      status:
+        "in progress (~50% through DataCamp's Associate AI Engineer for Developers track)",
+    },
+  ],
 };
 
 export default function Skills() {

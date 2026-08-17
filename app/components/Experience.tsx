@@ -6,7 +6,7 @@ const experiences = [
   {
     title: "Full Stack Web Developer (Front-end focus) & UX Designer",
     company: "STR Global Oy",
-    period: "2021 - January 2026",
+    period: "2021 - 2026",
     description:
       "Built and enhanced internal OMS and WMS applications with a frontend-focused full-stack approach, improving operational efficiency, interface responsiveness, and overall user experience for internal teams and business operations.",
   },
@@ -31,7 +31,7 @@ const experiences = [
   {
     title: "Web Developer, Tech Enthusiast & UI/UX Designer",
     company: "Freelance",
-    period: "2015 - Present",
+    period: "2018 - Present",
     description:
       "Designed and developed websites and digital products for clients using React, Next.js, Astro, and modern frontend technologies, with a strong focus on responsive design, performance, and user experience.",
   },

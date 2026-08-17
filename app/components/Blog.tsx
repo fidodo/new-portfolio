@@ -276,6 +276,9 @@ const Blog = () => {
                         )
                       }
                     >
+                      <h1 className="text-3xl font-bold mt-8 mb-4">
+                        {post.title}
+                      </h1>
                       <ReactMarkdown
                         components={{
                           // Custom markdown rendering for better UX

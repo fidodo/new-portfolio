@@ -30,7 +30,7 @@ interface Project {
   description: string;
   tech: readonly string[];
   link: string;
-  image: string;
+  image?: string;
   github?: string;
   status?: "In Progress" | "Completed" | "Archived";
   featured?: boolean;
@@ -69,7 +69,7 @@ const PROJECTS: readonly Project[] = [
     tech: ["Astro", "Tailwind CSS", "Framer Motion"] as const,
     link: "https://ogunfidodoayokunle.vercel.app/",
     image: "/projects/portfolio.webp",
-    year: 2024,
+    year: 2025,
   },
   {
     id: "renewal-guard",
@@ -80,7 +80,7 @@ const PROJECTS: readonly Project[] = [
     tech: ["Next.js", "TypeScript", "Tailwind CSS"] as const,
     link: "https://renewal-guard.vercel.app/",
     image: "/projects/renewal-guard.png",
-    year: 2024,
+    year: 2026,
   },
   {
     id: "spending-tracker",
@@ -98,7 +98,7 @@ const PROJECTS: readonly Project[] = [
     link: "https://github.com/fidodo/spending-tracker",
     image: "/projects/monthly-spending.webp",
     github: "https://github.com/fidodo/spending-tracker",
-    year: 2023,
+    year: 2026,
   },
 
   {
@@ -111,7 +111,7 @@ const PROJECTS: readonly Project[] = [
     image: "/projects/Bouyantech.webp",
     github: "https://github.com/fidodo/Bouyantech",
     status: "In Progress",
-    year: 2024,
+    year: 2026,
   },
   {
     id: "green-fields",
@@ -122,7 +122,18 @@ const PROJECTS: readonly Project[] = [
     image: "/projects/greenfields.webp",
     github: "https://github.com/fidodo/greenfileds_alhman",
     status: "In Progress",
-    year: 2024,
+    year: 2026,
+  },
+  {
+    id: "Ai resume assistant (In Progess)",
+    title: "AI Resume Assistant",
+    description:
+      "A chatbot built on the OpenAI API that answers questions about my background using my resume and project history as context. Built to apply what I'm learning in prompt engineering and retrieval directly, not just in coursework.",
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI API"] as const,
+    link: "https://ogunfidodoayokunle.vercel.app/",
+
+    status: "In Progress",
+    year: 2026,
   },
 ] as const;
 
@@ -296,7 +307,9 @@ export default function Projects() {
               {/* Image Container */}
               <div className="relative w-full h-48 md:h-56 overflow-hidden bg-gray-100 dark:bg-gray-800">
                 <Image
-                  src={project.image}
+                  src={
+                    project.image ? project.image : "/projects/fallback.webp"
+                  }
                   alt={`${project.title} project preview`}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"

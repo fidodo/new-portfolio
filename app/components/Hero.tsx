@@ -56,8 +56,8 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Frontend Focused Full Stack Engineer • UI/UX Enthusiast • Product
-            Innovator
+            Full-Stack Software Engineer • Building Toward AI/ML Engineering •
+            UX-Minded • Product Innovator
           </motion.p>
 
           <motion.p
@@ -67,8 +67,8 @@ export default function Hero() {
           >
             I build scalable, human-centered digital experiences using React,
             Next.js, TypeScript, and modern frontend technologies. Passionate
-            about combining clean engineering, UX thinking, innovation, and
-            interactive design to create meaningful products.
+            about combining clean engineering, UX thinking, LLM's, AI &
+            innovation, and interactive design to create meaningful products.
           </motion.p>
 
           <motion.div
