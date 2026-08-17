@@ -35,11 +35,11 @@ export default function About() {
             <p className="text-secondary">
               I specialize in responsive, production-grade web applications —
               from backend API design through to polished, WCAG-compliant
-              frontends. Right now I'm deliberately expanding into AI
-              engineering, working through DataCamp's Associate AI Engineer for
-              Developers track (OpenAI API, LangChain, Hugging Face, LLMOps),
-              because I want to build AI-powered features on top of a full-stack
-              foundation, not bolt AI on as an afterthought.
+              frontends. Right now I&apos;m deliberately expanding into AI
+              engineering, working through DataCamp&apos;s Associate AI Engineer
+              for Developers track (OpenAI API, LangChain, Hugging Face,
+              LLMOps), because I want to build AI-powered features on top of a
+              full-stack foundation, not bolt AI on as an afterthought.
             </p>
           </div>
         </div>

@@ -67,7 +67,7 @@ export default function Hero() {
           >
             I build scalable, human-centered digital experiences using React,
             Next.js, TypeScript, and modern frontend technologies. Passionate
-            about combining clean engineering, UX thinking, LLM's, AI &
+            about combining clean engineering, UX thinking, LLM&apos;s, AI &
             innovation, and interactive design to create meaningful products.
           </motion.p>
 
