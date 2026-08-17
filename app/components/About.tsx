@@ -25,8 +25,8 @@ export default function About() {
               real-time operational dashboards at STR Global Oy (2021–2026). I
               care about interfaces that are fast, accessible, and genuinely
               usable, which is where my MSc in Human-Technology Interaction
-              comes in: I don't just build features, I build ones people can
-              actually use under pressure.
+              comes in: I don&apos;t just build features, I build ones people
+              can actually use under pressure.
             </p>
           </div>
 
