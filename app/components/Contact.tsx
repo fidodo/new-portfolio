@@ -133,7 +133,7 @@ export default function Contact() {
               <p>
                 linkedin:{" "}
                 <a
-                  href="https://www.linkedin.com/in/ayokunle-ogunfidodo-a862a0153/"
+                  href="https://www.linkedin.com/in/ayokunle-ogunfidodo/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#e6b89c] hover:underline hover:text-[#f0d5c0] transition-colors"
