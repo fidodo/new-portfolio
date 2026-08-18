@@ -138,7 +138,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="text-[#e6b89c] hover:underline hover:text-[#f0d5c0] transition-colors"
                 >
-                  ayokunle-ogunfidodo-a862a0153
+                  ayokunle-ogunfidodo
                 </a>
                 ;
               </p>
