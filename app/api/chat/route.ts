@@ -20,7 +20,11 @@ interface Chunk {
   text: string;
   embedding: number[];
 }
-
+console.log(
+  "🔧 Chat API initialized with OpenAI and Groq clients",
+  process.env.OPENAI_API_KEY,
+  process.env.GROQ_API_KEY,
+);
 // Comprehensive mock data
 const MOCK_CHUNKS: Chunk[] = [
   {
@@ -226,7 +230,7 @@ async function generateWithFailover(
   try {
     console.log("💬 Attempting OpenAI...");
     const openaiResponse = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-5.5-turbo",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: question },
@@ -246,7 +250,7 @@ async function generateWithFailover(
     try {
       console.log("💬 Attempting Groq (fallback)...");
       const groqResponse = await groq.chat.completions.create({
-        model: "llama-3.3-70b-versatile", // Fast Groq model
+        model: "groq/compound", // Fast Groq model
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: question },
@@ -254,7 +258,7 @@ async function generateWithFailover(
         temperature: 0.7,
         max_tokens: 300,
       });
-
+      console.log(groqResponse);
       const answer = groqResponse.choices[0].message.content || "";
       console.log("✅ Groq success!");
       return { answer, provider: "groq" };

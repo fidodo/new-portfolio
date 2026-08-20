@@ -103,7 +103,7 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages - using portfolio background */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 h-96 bg-background/50">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 h-96 bg-background-secondary">
           {messages.map((message, index) => (
             <div
               key={index}
