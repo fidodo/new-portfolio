@@ -1,6 +1,3 @@
-// The stylesheet is processed by Next.js at build time, even when TypeScript
-// cannot resolve its side-effect import in the editor.
-// @ts-expect-error Next.js resolves CSS imports during bundling.
 import "./globals.css";
 import ChatWidget from "./components/ChatWidget";
 import type { Metadata } from "next";
