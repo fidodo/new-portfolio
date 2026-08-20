@@ -1,5 +1,3 @@
-// Next.js loads global CSS at runtime; the stylesheet is not a TypeScript module.
-// @ts-expect-error -- CSS side-effect imports are handled by Next.js.
 import "./globals.css";
 import ChatWidget from "./components/ChatWidget";
 import type { Metadata } from "next";
