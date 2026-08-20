@@ -11,6 +11,7 @@ import Projects from "./components/Projects";
 import Experience from "./components/Experience";
 import Contact from "./components/Contact";
 import Blog from "./components/Blog";
+import ChatWidget from "./components/ChatWidget";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -61,6 +62,7 @@ export default function Home() {
         <Experience />
         <Contact />
         <Blog />
+        <ChatWidget />
       </main>
     </>
   );

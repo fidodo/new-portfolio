@@ -1,4 +1,7 @@
+// Next.js loads global CSS at runtime; the stylesheet is not a TypeScript module.
+// @ts-expect-error -- CSS side-effect imports are handled by Next.js.
 import "./globals.css";
+import ChatWidget from "./components/ChatWidget";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import HydrationWrapper from "./components/HydrationWrapper";
@@ -24,6 +27,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         {" "}
         <HydrationWrapper>{children} </HydrationWrapper>
+        <ChatWidget />
       </body>
     </html>
   );

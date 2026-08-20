@@ -1,0 +1,33 @@
+# Ayokunle Ogunfidodo - Portfolio Data
+
+## About Me
+I'm a full-stack developer with 5+ years shipping production React, Next.js, and Node.js platforms. I've been working at STR Global Oy from 2021-2026, building real-time operational dashboards. I have an MSc in Human-Technology Interaction, which means I focus on interfaces that are fast, accessible, and genuinely usable.
+
+## Skills
+Frontend: React (Advanced), Next.js (Advanced), TypeScript (Advanced), Tailwind CSS (Advanced)
+Backend: Node.js (Intermediate), GraphQL (Intermediate), PostgreSQL (Intermediate)
+AI/ML: OpenAI API (Intermediate), Prompt Engineering (Intermediate), Hugging Face (Intermediate), LangChain (Intermediate)
+
+## Projects
+1. Renewal Guard: A license renewal tracker built with Next.js and Tailwind CSS. Features include automated reminders, status tracking, and user authentication.
+
+2. Spending Tracker App: A personal finance tracker to monitor monthly expenses, loans, bills and budgets using React and PostgreSQL.
+
+3. AI Resume Assistant: A chatbot built on the OpenAI API that answers questions about my background. Uses prompt engineering and retrieval to provide accurate responses.
+
+4. E-commerce Store: A full-stack CMS e-commerce platform with product listings, cart, and checkout functionality using Next.js and MongoDB.
+
+5. AlhmanEdu Green Fields: A blog platform built with Strapi CMS in the backend and React in the frontend.
+
+## Experience
+STR Global Oy (2021-2026): Full Stack Web Developer. Built and enhanced internal OMS and WMS applications, improving operational efficiency and user experience for internal teams.
+
+Kasvuhuoneilmiö × AhlmanEdu (2026): Innovation Program Participant. Collaborated in a multidisciplinary team to design community-focused experiences. Built a CMS-driven platform using React and Strapi.
+
+Freelance (2018-Present): Web Developer and UI/UX Designer. Designed and developed websites using React, Next.js, and Astro with focus on responsive design and performance.
+
+## Education
+MSc in Human-Technology Interaction - Focus on usability, accessibility, and user-centered design principles.
+
+## Current Focus
+Currently expanding into AI engineering through DataCamp's Associate AI Engineer for Developers track, learning about OpenAI API, LangChain, Hugging Face, and LLMOps. The goal is to build AI-powered features on top of a full-stack foundation.
