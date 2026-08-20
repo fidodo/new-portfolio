@@ -69,6 +69,7 @@ const PROJECTS: readonly Project[] = [
     tech: ["Astro", "Tailwind CSS", "Framer Motion"] as const,
     link: "https://ogunfidodoayokunle.vercel.app/",
     image: "/projects/portfolio.webp",
+    github: "https://github.com/fidodo/new-portfolio",
     year: 2025,
   },
   {
@@ -131,7 +132,7 @@ const PROJECTS: readonly Project[] = [
       "A chatbot built on the OpenAI API that answers questions about my background using my resume and project history as context. Built to apply what I'm learning in prompt engineering and retrieval directly, not just in coursework.",
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI API"] as const,
     link: "https://ogunfidodoayokunle.vercel.app/",
-
+    github: "https://github.com/fidodo/new-portfolio",
     status: "In Progress",
     year: 2026,
   },
