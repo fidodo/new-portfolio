@@ -79,7 +79,7 @@ export default function ChatWidget() {
       {/* Floating button - using portfolio primary color */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110"
+        className="fixed bottom-20 right-6 md:bottom-6 z-50 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110"
         aria-label="Toggle chat"
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
@@ -87,12 +87,11 @@ export default function ChatWidget() {
 
       {/* Chat window - using portfolio card colors */}
       <div
-        className={`fixed bottom-24 right-6 z-50 w-96 bg-card text-card-foreground rounded-2xl shadow-2xl border border-border transition-all duration-300 transform ${
+        className={`fixed bottom-40 right-6 md:bottom-24 z-50 w-[calc(100vw-3rem)] sm:w-96 max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-7.5rem)] bg-card text-card-foreground rounded-2xl shadow-2xl border border-border transition-all duration-300 transform ${
           isOpen
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-4 pointer-events-none"
         }`}
-        style={{ maxHeight: "calc(100vh - 120px)" }}
       >
         {/* Header - using gradient from portfolio */}
         <div className="bg-gradient-primary text-primary-foreground rounded-t-2xl p-4">
@@ -103,7 +102,7 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages - using portfolio background */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 h-96 bg-background-secondary">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 h-96 bg-muted">
           {messages.map((message, index) => (
             <div
               key={index}

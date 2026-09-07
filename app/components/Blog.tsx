@@ -4,6 +4,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { useAdminSession } from "../lib/useAdminSession";
 
 interface BlogPost {
   id: string;
@@ -21,12 +22,16 @@ const Blog = () => {
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
   const [readingProgress, setReadingProgress] = useState(0);
+  const { isAdmin } = useAdminSession();
 
   useEffect(() => {
     const updateProgress = () => {
       const current = window.scrollY;
       const maxScroll = document.body.scrollHeight - window.innerHeight;
-      const progress = (current / maxScroll) * 100;
+      const progress =
+        maxScroll > 0
+          ? Math.min(100, Math.max(0, (current / maxScroll) * 100))
+          : 0;
       setReadingProgress(progress);
     };
 
@@ -37,11 +42,6 @@ const Blog = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
-
-  <div
-    className="reading-progress"
-    style={{ transform: `scaleX(${readingProgress / 100})` }}
-  />;
 
   const fetchPosts = async () => {
     try {
@@ -164,6 +164,10 @@ const Blog = () => {
 
   return (
     <section id="blog" className="section">
+      <div
+        className="reading-progress"
+        style={{ transform: `scaleX(${readingProgress / 100})` }}
+      />
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -222,47 +226,49 @@ const Blog = () => {
                           {formatDate(post.createdAt)}
                         </span>
 
-                        {/* Admin actions (only visible to admin) */}
-                        <div className="flex gap-1">
-                          <button
-                            onClick={() => handleEdit(post)}
-                            className="p-2 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
-                            aria-label="Edit post"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                        {/* Admin actions (only visible when an authenticated admin session exists) */}
+                        {isAdmin && (
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => handleEdit(post)}
+                              className="p-2 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+                              aria-label="Edit post"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                              />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => handleDelete(post.id)}
-                            className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-                            aria-label="Delete post"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleDelete(post.id)}
+                              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                              aria-label="Delete post"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button>
-                        </div>
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
 

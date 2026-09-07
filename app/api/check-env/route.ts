@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { requireAdmin } from "../../lib/adminSession";
 
 export async function GET() {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   const results: any = {
     env: {
       DATABASE_URL_exists: !!process.env.DATABASE_URL,

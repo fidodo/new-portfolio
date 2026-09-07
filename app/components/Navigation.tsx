@@ -63,7 +63,7 @@ export default function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <span className="text-xl font-bold text-text">
+            <span className="text-xl font-bold text-foreground">
               Ayokunle Ogunfidodo
             </span>
             <div className="flex items-center space-x-4">
@@ -75,7 +75,7 @@ export default function Navigation() {
                     ${
                       activeSection === id
                         ? "text-white bg-primary"
-                        : "text-text hover:text-primary"
+                        : "text-foreground hover:text-primary"
                     }`}
                 >
                   {<Icon size={20} />} {label}

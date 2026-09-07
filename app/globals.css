@@ -5,7 +5,12 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.99 0.002 70);
+  /* -raw holds bare OKLCH components (no oklch() wrapper) so Tailwind's
+     opacity-modifier syntax (e.g. bg-primary/60) can splice in an alpha
+     channel via oklch(var(--x-raw) / <alpha-value>) in tailwind.config.ts.
+     Only tokens actually used with a /opacity modifier need this pair. */
+  --background-raw: 0.99 0.002 70;
+  --background: oklch(var(--background-raw));
   --foreground: oklch(0.15 0.02 70);
 
   --card: oklch(0.99 0.006 80);
@@ -13,16 +18,13 @@
   --card-shadow:
     0 8px 30px oklch(0.72 0.16 45 / 0.06), 0 2px 8px oklch(0.72 0.16 45 / 0.02);
 
-  --popover: oklch(0.99 0.006 80);
-  --popover-foreground: oklch(0.15 0.02 70);
-  --popover-shadow:
-    0 20px 40px oklch(0.72 0.16 45 / 0.08),
-    0 8px 20px oklch(0.72 0.16 45 / 0.04);
-
-  --primary: oklch(0.72 0.16 45);
-  --primary-foreground: oklch(0.99 0.002 70);
+  --primary-raw: 0.72 0.16 45;
+  --primary: oklch(var(--primary-raw));
+  /* Dark text: primary is a mid-lightness terracotta, so white text on it fails
+     WCAG AA (~2.55:1). Reusing --foreground gives ~7.5:1. */
+  --primary-foreground: var(--foreground);
   --primary-glow:
-    0 0 0 1px rgba(230, 120, 80, 0.15), 0 4px 12px rgba(210, 100, 60, 0.25);
+    0 0 0 1px oklch(0.72 0.16 45 / 0.15), 0 4px 12px oklch(0.65 0.18 40 / 0.25);
 
   --secondary: oklch(0.96 0.01 75);
   --secondary-foreground: oklch(0.3 0.03 70);
@@ -38,30 +40,13 @@
 
   --border: oklch(0.92 0.01 75);
   --input: oklch(0.95 0.008 75);
-  --input-focus: oklch(0.72 0.16 45 / 0.2);
 
-  --ring: oklch(0.72 0.16 45 / 0.3);
-  --ring-glow: 0 0 0 3px oklch(0.72 0.16 45 / 0.1);
+  /* Opaque and darker than --primary so it clears the 3:1 WCAG non-text
+     contrast minimum for focus indicators against light backgrounds. */
+  --ring: oklch(0.55 0.18 45);
+  --ring-glow: 0 0 0 3px oklch(0.55 0.18 45 / 0.4);
 
-  --chart-1: oklch(0.72 0.16 45);
-  --chart-2: oklch(0.68 0.15 85);
-  --chart-3: oklch(0.58 0.12 160);
-  --chart-4: oklch(0.78 0.14 65);
-  --chart-5: oklch(0.62 0.18 25);
-
-  --sidebar: oklch(0.99 0.002 70 / 0.7);
-  --sidebar-foreground: oklch(0.15 0.02 70);
-  --sidebar-primary: oklch(0.72 0.16 45);
-  --sidebar-primary-foreground: oklch(0.99 0.002 70);
-  --sidebar-accent: oklch(0.88 0.08 130 / 0.3);
-  --sidebar-accent-foreground: oklch(0.25 0.05 130);
-  --sidebar-border: oklch(0.93 0.008 70 / 0.5);
-  --sidebar-ring: oklch(0.72 0.16 45 / 0.3);
-  --sidebar-blur: blur(12px);
-
-  --surface-1: oklch(0.99 0.006 80);
-  --surface-2: oklch(0.98 0.008 78);
-  --surface-3: oklch(0.97 0.01 76);
+  --success: oklch(0.6 0.16 150);
 
   --gradient-primary: linear-gradient(
     135deg,
@@ -87,7 +72,8 @@
 }
 
 .dark {
-  --background: oklch(0.12 0.02 70);
+  --background-raw: 0.12 0.02 70;
+  --background: oklch(var(--background-raw));
   --foreground: oklch(0.98 0.002 70);
 
   --card: oklch(0.18 0.02 75);
@@ -95,10 +81,11 @@
   --card-shadow:
     0 8px 30px rgba(0, 0, 0, 0.5), 0 2px 8px oklch(0.72 0.16 45 / 0.2);
 
-  --primary: oklch(0.82 0.14 45);
+  --primary-raw: 0.82 0.14 45;
+  --primary: oklch(var(--primary-raw));
   --primary-foreground: oklch(0.12 0.02 70);
   --primary-glow:
-    0 0 0 1px rgba(255, 160, 120, 0.2), 0 4px 20px rgba(230, 120, 70, 0.4);
+    0 0 0 1px oklch(0.82 0.14 45 / 0.2), 0 4px 20px oklch(0.75 0.16 40 / 0.4);
 
   --secondary: oklch(0.24 0.02 70);
   --secondary-foreground: oklch(0.98 0.002 70);
@@ -112,9 +99,22 @@
   --border: oklch(1 0 0 / 0.15);
   --input: oklch(1 0 0 / 0.12);
 
-  --sidebar: oklch(0.18 0.02 70 / 0.85);
-  --sidebar-border: oklch(1 0 0 / 0.12);
-  --sidebar-blur: blur(16px);
+  --ring: oklch(0.82 0.14 45);
+  --ring-glow: 0 0 0 3px oklch(0.82 0.14 45 / 0.4);
+
+  --success: oklch(0.7 0.16 150);
+
+  --gradient-mesh:
+    radial-gradient(
+      circle at 0% 50%,
+      oklch(0.75 0.1 130 / 0.08),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 100% 50%,
+      oklch(0.82 0.14 45 / 0.08),
+      transparent 50%
+    );
 }
 
 body {
@@ -149,13 +149,6 @@ h6 {
   position: relative;
 }
 
-.glass-card {
-  background: oklch(1 0 0 / 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.93 0.008 70 / 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.02);
-}
-
 .heading {
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   font-weight: 700;
@@ -172,7 +165,7 @@ h6 {
 }
 
 .subheading {
-  @apply text-xl text-secondary mb-16 text-center max-w-2xl mx-auto;
+  @apply text-xl text-secondary-foreground mb-16 text-center max-w-2xl mx-auto;
   line-height: 1.6;
   font-weight: 400;
   text-decoration: none;
@@ -264,7 +257,7 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--ring);
   box-shadow: var(--ring-glow);
   background: var(--card);
 }
@@ -309,22 +302,6 @@ select:focus {
 
 .mesh-gradient {
   background-image: var(--gradient-mesh);
-}
-
-.text-primary {
-  color: var(--primary);
-}
-.text-secondary {
-  color: var(--secondary-foreground);
-}
-.text-muted {
-  color: var(--muted-foreground);
-}
-.bg-primary {
-  background: var(--gradient-primary);
-}
-.bg-secondary {
-  background: var(--secondary);
 }
 
 .subheading::after {
@@ -627,7 +604,7 @@ select:focus {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #4ade80;
+  background: var(--success);
   animation: pulse-dot 2s infinite;
 }
 

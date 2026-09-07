@@ -2,28 +2,58 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAdminSession } from "../lib/useAdminSession";
 
 export default function AdminPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [status, setStatus] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAdmin, isLoading, setIsAdmin } = useAdminSession();
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoginError("");
 
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      console.log(process.env.NEXT_PUBLIC_ADMIN_PASSWORD);
-      setIsAuthenticated(true);
-    } else {
-      alert("Wrong password");
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+
+      if (response.ok) {
+        setIsAdmin(true);
+        setPassword("");
+      } else if (response.status === 429) {
+        setLoginError("Too many attempts. Try again later.");
+      } else {
+        setLoginError("Wrong password");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setLoginError("Login failed");
     }
   };
 
-  if (!isAuthenticated) {
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } catch (error) {
+      console.error("Error logging out:", error);
+    } finally {
+      setIsAdmin(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-gray-50" />;
+  }
+
+  if (!isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <form
@@ -38,6 +68,9 @@ export default function AdminPage() {
             placeholder="Enter password"
             className="w-full px-4 py-2 border rounded-lg mb-4"
           />
+          {loginError && (
+            <p className="text-sm text-red-500 mb-4">{loginError}</p>
+          )}
           <button
             type="submit"
             className="w-full py-2 bg-blue-500 text-white rounded-lg"
@@ -84,7 +117,15 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4">
-        <h1 className="text-3xl font-bold mb-8">Add Development Log</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">Add Development Log</h1>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-100"
+          >
+            Log out
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>

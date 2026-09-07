@@ -1,6 +1,7 @@
 // app/api/blog/route.ts
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { requireAdmin } from "../../lib/adminSession";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 const prisma = globalForPrisma.prisma || new PrismaClient();
@@ -25,6 +26,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   try {
     const { title, content } = await request.json();
     console.log("Received blog post:", { title, content });
@@ -53,6 +57,9 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   try {
     const { id } = await request.json();
 
@@ -83,6 +90,9 @@ export async function DELETE(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   try {
     const { id, title, content } = await request.json();
 

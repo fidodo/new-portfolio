@@ -19,7 +19,7 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold text-primary">Who I Am</h3>
-            <p className="text-secondary">
+            <p className="text-secondary-foreground">
               I&apos;m a full-stack developer with 5+ years shipping production
               React, Next.js, and Node.js platforms — most recently building
               real-time operational dashboards at STR Global Oy (2021–2026). I
@@ -32,7 +32,7 @@ export default function About() {
 
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold text-primary">What I Do</h3>
-            <p className="text-secondary">
+            <p className="text-secondary-foreground">
               I specialize in responsive, production-grade web applications —
               from backend API design through to polished, WCAG-compliant
               frontends. Right now I&apos;m deliberately expanding into AI

@@ -62,9 +62,9 @@ export default function Experience() {
               <h3 className="text-xl font-semibold text-primary">
                 {exp.title}
               </h3>
-              <p className="text-secondary mb-1">{exp.company}</p>
-              <p className="text-sm text-secondary mb-2">{exp.period}</p>
-              <p className="text-secondary">{exp.description}</p>
+              <p className="text-secondary-foreground mb-1">{exp.company}</p>
+              <p className="text-sm text-secondary-foreground mb-2">{exp.period}</p>
+              <p className="text-secondary-foreground">{exp.description}</p>
             </motion.div>
           ))}
         </div>
