@@ -2,12 +2,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import Groq from "groq-sdk";
+import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import path from "path";
 
-// Initialize both clients
+// OpenAI is only used for question embeddings; chat answers come from
+// Gemini, with Groq as a backup
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+});
+
+const gemini = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
 const groq = new Groq({
@@ -20,11 +26,7 @@ interface Chunk {
   text: string;
   embedding: number[];
 }
-console.log(
-  "🔧 Chat API initialized with OpenAI and Groq clients",
-  process.env.OPENAI_API_KEY,
-  process.env.GROQ_API_KEY,
-);
+console.log("🔧 Chat API initialized with OpenAI, Gemini and Groq clients");
 // Comprehensive mock data
 const MOCK_CHUNKS: Chunk[] = [
   {
@@ -44,7 +46,7 @@ const MOCK_CHUNKS: Chunk[] = [
   },
   {
     id: "chunk_3",
-    text: "Projects: Renewal Guard (Next.js, Tailwind CSS - license renewal tracker), Spending Tracker App (React, PostgreSQL - personal finance), AI Resume Assistant (OpenAI API - chatbot about background), E-commerce Store (Next.js, MongoDB - full-stack CMS), AlhmanEdu Green Fields (React, Strapi - blog platform), Portfolio Website (Astro, Tailwind CSS).",
+    text: "Projects: Renewal Guard (Next.js, Tailwind CSS - license renewal tracker), Spending Tracker App (React, PostgreSQL - personal finance), AI Resume Assistant (Gemini API - chatbot about background), E-commerce Store (Next.js, MongoDB - full-stack CMS), AlhmanEdu Green Fields (React, Strapi - blog platform), Portfolio Website (Astro, Tailwind CSS).",
     embedding: [0.1, 0.2, 0.3, 0.4, 0.5],
   },
   {
@@ -138,6 +140,15 @@ function keywordSearch(
   return scored.slice(0, topK);
 }
 
+// Pull the text following "Label:" up to the end of that sentence
+// (a period followed by whitespace, so "Next.js" is not cut short)
+function extractSection(label: string, text: string): string | null {
+  const match = text.match(
+    new RegExp(`${label}:\\s*(.+?)(?:\\.\\s|\\.$|$)`, "i"),
+  );
+  return match ? match[1].trim() : null;
+}
+
 // Generate fallback response without API calls
 function generateFallbackResponse(
   question: string,
@@ -151,66 +162,52 @@ function generateFallbackResponse(
 
   const contextText = relevantChunks.map((c) => c.text).join(" ");
   const questionLower = question.toLowerCase();
+  const hasWord = (...words: string[]) =>
+    new RegExp(`\\b(${words.join("|")})\\b`).test(questionLower);
 
-  if (
-    questionLower.includes("project") ||
-    questionLower.includes("build") ||
-    questionLower.includes("created")
-  ) {
-    const projects = contextText.match(/Projects?:?([^.]+\.)/i);
+  if (hasWord("projects?", "build", "built", "created")) {
+    const projects = extractSection("Projects?", contextText);
     if (projects) {
-      return `Ayokunle has worked on several projects including: ${projects[1].trim()}. He builds with React, Next.js, and modern web technologies.`;
+      return `Ayokunle has worked on several projects including: ${projects}. He builds with React, Next.js, and modern web technologies.`;
     }
   }
 
-  if (
-    questionLower.includes("skill") ||
-    questionLower.includes("tech") ||
-    questionLower.includes("technology")
-  ) {
-    const skills = contextText.match(/Skills?:?([^.]+\.)/i);
+  if (hasWord("skills?", "tech", "technology", "technologies")) {
+    const skills = extractSection("Skills?", contextText);
     if (skills) {
-      return `Ayokunle's technical skills include: ${skills[1].trim()}. He's particularly strong in React, Next.js, and TypeScript.`;
+      return `Ayokunle's technical skills include: ${skills}. He's particularly strong in React, Next.js, and TypeScript.`;
     }
   }
 
-  if (
-    questionLower.includes("experience") ||
-    questionLower.includes("work") ||
-    questionLower.includes("job")
-  ) {
-    const experience = contextText.match(/Experience?:?([^.]+\.)/i);
+  if (hasWord("experience", "work", "job")) {
+    const experience = extractSection("Experience", contextText);
     if (experience) {
-      return `Ayokunle has over 5 years of experience as a Full-Stack Developer. ${experience[1].trim()}`;
+      return `Ayokunle has over 5 years of experience as a Full-Stack Developer. ${experience}.`;
     }
   }
 
-  if (
-    questionLower.includes("education") ||
-    questionLower.includes("study") ||
-    questionLower.includes("degree")
-  ) {
-    const education = contextText.match(/Education?:?([^.]+\.)/i);
+  if (hasWord("education", "study", "degree")) {
+    const education = extractSection("Education", contextText);
     if (education) {
-      return `Ayokunle holds an MSc in Human-Technology Interaction, focusing on usability and user-centered design. ${education[1].trim()}`;
+      return `Ayokunle holds an MSc in Human-Technology Interaction, focusing on usability and user-centered design. ${education}.`;
     }
   }
 
-  if (
-    questionLower.includes("ai") ||
-    questionLower.includes("machine learning") ||
-    questionLower.includes("ml")
-  ) {
+  if (hasWord("ai", "machine learning", "ml")) {
     return "Ayokunle is actively building AI skills through DataCamp's Associate AI Engineer track. He's learning about OpenAI API, Prompt Engineering, Hugging Face, LangChain, and LLMOps. He's passionate about integrating AI into full-stack applications.";
   }
 
-  if (questionLower.includes("who") || questionLower.includes("about")) {
+  if (hasWord("who", "about")) {
     return "Ayokunle Ogunfidodo is a Full-Stack Software Engineer with over 5 years of experience. He specializes in React, Next.js, and TypeScript, and is currently transitioning into AI Engineering. He has an MSc in Human-Technology Interaction and has worked at STR Global Oy building operational dashboards.";
   }
 
-  const firstSentence = contextText.split(".")[0];
+  const firstSentence = contextText.split(/\.\s/)[0].replace(/\.$/, "");
   if (firstSentence) {
-    return `${firstSentence}. ${relevantChunks.length > 1 ? "I can tell you more about specific topics like skills, projects, experience, or education if you ask!" : ""}`;
+    const hint =
+      relevantChunks.length > 1
+        ? " I can tell you more about specific topics like skills, projects, experience, or education if you ask!"
+        : "";
+    return `${firstSentence}.${hint}`;
   }
 
   return "I'm an AI assistant for Ayokunle's portfolio. I can answer questions about his experience, skills, projects, education, and AI journey. Feel free to ask specific questions!";
@@ -222,58 +219,60 @@ function generateFallbackResponse(
 async function generateWithFailover(
   systemPrompt: string,
   question: string,
-  context: string,
+  relevantChunks: Chunk[],
 ): Promise<{ answer: string; provider: string }> {
-  const errors: string[] = [];
+  const messages = [
+    { role: "system" as const, content: systemPrompt },
+    { role: "user" as const, content: question },
+  ];
 
-  // Try OpenAI first
+  // Try Gemini first
   try {
-    console.log("💬 Attempting OpenAI...");
-    const openaiResponse = await openai.chat.completions.create({
-      model: "gpt-5.5-turbo",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: question },
-      ],
-      temperature: 0.7,
-      max_tokens: 300,
+    console.log("💬 Attempting Gemini...");
+    const geminiResponse = await gemini.models.generateContent({
+      model: "gemini-3.5-flash-lite",
+      contents: question,
+      config: {
+        systemInstruction: systemPrompt,
+        temperature: 0.7,
+        // Thinking tokens count against this budget, so leave headroom
+        maxOutputTokens: 1024,
+      },
     });
 
-    const answer = openaiResponse.choices[0].message.content || "";
-    console.log("✅ OpenAI success!");
-    return { answer, provider: "openai" };
+    const answer = geminiResponse.text?.trim();
+    if (!answer) throw new Error("Empty response");
+    console.log("✅ Gemini success!");
+    return { answer, provider: "gemini" };
   } catch (error: any) {
-    console.log(`❌ OpenAI failed: ${error.message || "Unknown error"}`);
-    errors.push(`OpenAI: ${error.message}`);
-
-    // If OpenAI fails, try Groq
-    try {
-      console.log("💬 Attempting Groq (fallback)...");
-      const groqResponse = await groq.chat.completions.create({
-        model: "groq/compound", // Fast Groq model
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: question },
-        ],
-        temperature: 0.7,
-        max_tokens: 300,
-      });
-      console.log(groqResponse);
-      const answer = groqResponse.choices[0].message.content || "";
-      console.log("✅ Groq success!");
-      return { answer, provider: "groq" };
-    } catch (error: any) {
-      console.log(`❌ Groq failed: ${error.message || "Unknown error"}`);
-      errors.push(`Groq: ${error.message}`);
-
-      // Both failed - use fallback
-      return {
-        answer:
-          "I'm having trouble connecting to my AI services right now. Please try again in a moment.",
-        provider: "fallback",
-      };
-    }
+    console.log(`❌ Gemini failed: ${error.message || "Unknown error"}`);
   }
+
+  // If Gemini fails, try Groq
+  try {
+    console.log("💬 Attempting Groq (fallback)...");
+    const groqResponse = await groq.chat.completions.create({
+      model: "openai/gpt-oss-120b",
+      messages,
+      temperature: 0.7,
+      // Reasoning tokens count against the completion budget, so keep
+      // reasoning short and leave headroom for the visible answer
+      reasoning_effort: "low",
+      max_completion_tokens: 1024,
+    });
+    const answer = groqResponse.choices[0].message.content?.trim();
+    if (!answer) throw new Error("Empty response");
+    console.log("✅ Groq success!");
+    return { answer, provider: "groq" };
+  } catch (error: any) {
+    console.log(`❌ Groq failed: ${error.message || "Unknown error"}`);
+  }
+
+  // Both failed - answer locally from the retrieved chunks
+  return {
+    answer: generateFallbackResponse(question, relevantChunks),
+    provider: "fallback",
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -348,7 +347,7 @@ Answer:`;
     const { answer, provider } = await generateWithFailover(
       systemPrompt,
       question,
-      context,
+      relevantChunks,
     );
 
     console.log(`✅ Final answer from: ${provider}`);

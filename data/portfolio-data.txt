@@ -13,7 +13,7 @@ AI/ML: OpenAI API (Intermediate), Prompt Engineering (Intermediate), Hugging Fac
 
 2. Spending Tracker App: A personal finance tracker to monitor monthly expenses, loans, bills and budgets using React and PostgreSQL.
 
-3. AI Resume Assistant: A chatbot built on the OpenAI API that answers questions about my background. Uses prompt engineering and retrieval to provide accurate responses.
+3. AI Resume Assistant: A chatbot built on the Google Gemini API that answers questions about my background. Uses prompt engineering and retrieval to provide accurate responses.
 
 4. E-commerce Store: A full-stack CMS e-commerce platform with product listings, cart, and checkout functionality using Next.js and MongoDB.
 

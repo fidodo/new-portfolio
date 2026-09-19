@@ -17,6 +17,7 @@ import {
   SiStrapi,
   SiPostcss,
   SiChartdotjs,
+  SiGooglegemini,
 } from "react-icons/si";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import type { IconType } from "react-icons";
@@ -59,6 +60,7 @@ const TECH_CONFIG: Record<string, TechConfig> = {
   MongoDB: { icon: SiMongodb, color: "#47A248", bgOpacity: 0.15 },
   Strapi: { icon: SiStrapi, color: "#D53F8C", bgOpacity: 0.15 },
   Scss: { icon: SiPostcss, color: "#CB6699", bgOpacity: 0.15 },
+  "Gemini API": { icon: SiGooglegemini, color: "#8E75B2", bgOpacity: 0.15 },
 };
 
 const PROJECTS: readonly Project[] = [
@@ -129,9 +131,10 @@ const PROJECTS: readonly Project[] = [
     id: "Ai resume assistant (In Progess)",
     title: "AI Resume Assistant",
     description:
-      "A chatbot built on the OpenAI API that answers questions about my background using my resume and project history as context. Built to apply what I'm learning in prompt engineering and retrieval directly, not just in coursework.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI API"] as const,
+      "A chatbot built on the Google Gemini API that answers questions about my background using my resume and project history as context. Built to apply what I'm learning in prompt engineering and retrieval directly, not just in coursework.",
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Gemini API"] as const,
     link: "https://ogunfidodoayokunle.vercel.app/",
+    image: "/projects/ai-assistant.webp",
     github: "https://github.com/fidodo/new-portfolio",
     status: "In Progress",
     year: 2026,
