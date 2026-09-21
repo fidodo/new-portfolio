@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 :root {
+  /* Native controls, scrollbars and autofill follow the active theme. */
+  color-scheme: light;
+  accent-color: var(--primary);
   --radius: 0.75rem;
 
   /* -raw holds bare OKLCH components (no oklch() wrapper) so Tailwind's
@@ -20,6 +23,11 @@
 
   --primary-raw: 0.72 0.16 45;
   --primary: oklch(var(--primary-raw));
+  /* --primary is a FILL colour. As text on the page background it is only
+     2.55:1, so text uses --primary-text (7.4:1). tailwind.config.ts maps
+     text-primary to this token, so existing text-primary usages are fixed. */
+  --primary-text-raw: 0.46 0.16 45;
+  --primary-text: oklch(var(--primary-text-raw));
   /* Dark text: primary is a mid-lightness terracotta, so white text on it fails
      WCAG AA (~2.55:1). Reusing --foreground gives ~7.5:1. */
   --primary-foreground: var(--foreground);
@@ -30,23 +38,31 @@
   --secondary-foreground: oklch(0.3 0.03 70);
 
   --muted: oklch(0.97 0.008 75);
-  --muted-foreground: oklch(0.55 0.03 70);
+  /* 6.0:1+ on background, muted, card, secondary and input surfaces
+     (was 0.55 = 4.2:1 on the input surface, failing AA). */
+  --muted-foreground: oklch(0.48 0.03 70);
 
   --accent: oklch(0.88 0.08 130);
   --accent-foreground: oklch(0.25 0.05 130);
 
-  --destructive: oklch(0.65 0.2 35);
+  /* Usable both as a fill (white text 6.5:1) and as text on the page (6.5:1). */
+  --destructive: oklch(0.5 0.2 30);
   --destructive-foreground: oklch(0.99 0.002 70);
 
+  /* --border is decorative (cards, dividers). Anything that identifies an
+     interactive control by its outline must use --input-border (>=3:1,
+     WCAG 1.4.11 Non-text Contrast). */
   --border: oklch(0.92 0.01 75);
-  --input: oklch(0.95 0.008 75);
+  --input: oklch(0.985 0.004 75);
+  --input-border: oklch(0.6 0.02 70);
 
   /* Opaque and darker than --primary so it clears the 3:1 WCAG non-text
      contrast minimum for focus indicators against light backgrounds. */
   --ring: oklch(0.55 0.18 45);
   --ring-glow: 0 0 0 3px oklch(0.55 0.18 45 / 0.4);
 
-  --success: oklch(0.6 0.16 150);
+  /* Also used as text (5.4:1 on background). */
+  --success: oklch(0.5 0.14 150);
 
   --gradient-primary: linear-gradient(
     135deg,
@@ -72,6 +88,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background-raw: 0.12 0.02 70;
   --background: oklch(var(--background-raw));
   --foreground: oklch(0.98 0.002 70);
@@ -83,6 +100,9 @@
 
   --primary-raw: 0.82 0.14 45;
   --primary: oklch(var(--primary-raw));
+  /* Light fill is already dark-safe text on a dark surface (10.5:1). */
+  --primary-text-raw: 0.82 0.14 45;
+  --primary-text: oklch(var(--primary-text-raw));
   --primary-foreground: oklch(0.12 0.02 70);
   --primary-glow:
     0 0 0 1px oklch(0.82 0.14 45 / 0.2), 0 4px 20px oklch(0.75 0.16 40 / 0.4);
@@ -96,8 +116,14 @@
   --accent: oklch(0.75 0.1 130);
   --accent-foreground: oklch(0.12 0.02 70);
 
+  --destructive: oklch(0.72 0.17 30);
+  --destructive-foreground: oklch(0.12 0.02 70);
+
   --border: oklch(1 0 0 / 0.15);
-  --input: oklch(1 0 0 / 0.12);
+  /* Opaque so contrast is predictable (translucent white varied with the
+     surface underneath). Border is 4.8:1+ against bg, card and input. */
+  --input: oklch(0.16 0.02 70);
+  --input-border: oklch(0.6 0.02 70);
 
   --ring: oklch(0.82 0.14 45);
   --ring-glow: 0 0 0 3px oklch(0.82 0.14 45 / 0.4);
@@ -142,6 +168,7 @@ h6 {
   font-weight: 600;
   letter-spacing: -0.022em;
   line-height: 1.2;
+  text-wrap: balance;
 }
 
 .section {
@@ -154,10 +181,12 @@ h6 {
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1.5rem;
+  /* Ends on --primary-text, not --primary: the fill colour is 2.55:1 on the
+     page, below the 3:1 large-text minimum. */
   background: linear-gradient(
     135deg,
     var(--foreground) 0%,
-    var(--primary) 100%
+    var(--primary-text) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -172,59 +201,111 @@ h6 {
   position: relative;
 }
 
-.button {
-  @apply px-8 py-4 rounded-xl font-medium 
-         transition-all duration-300 ease-out
-         focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-  background: var(--gradient-primary);
-  color: var(--primary-foreground);
-  box-shadow: 0 4px 14px oklch(0.72 0.16 45 / 0.25);
-  position: relative;
-  overflow: hidden;
-  border: none;
-}
+/* Buttons live in @layer components so Tailwind utilities (w-full, px-*, ...)
+   can override them without specificity fights.
+   Primary:   dark text on the terracotta gradient, 6.5:1-8.7:1.
+   Secondary: `button button-secondary`, foreground on transparent with a
+              3:1 outline (--input-border) so it reads as a control. */
+@layer components {
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-block-size: 3rem; /* 48px touch target */
+    padding: 0.875rem 2rem;
+    /* Transparent (not none) so the button keeps an outline in Windows
+       forced-colors mode, where gradients and shadows are stripped. */
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background: var(--gradient-primary) border-box;
+    color: var(--primary-foreground);
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    box-shadow: 0 4px 14px color-mix(in oklch, var(--primary) 25%, transparent);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    cursor: pointer;
+    transition:
+      transform 0.2s ease-out,
+      box-shadow 0.2s ease-out,
+      background-color 0.2s ease-out,
+      border-color 0.2s ease-out;
+  }
 
-.button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 240, 230, 0.3),
-    /* Warm white shimmer */ transparent
-  );
-  transition: left 0.5s ease;
-}
+  .button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(255 240 230 / 0.3),
+      /* Warm white shimmer */ transparent
+    );
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
 
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px oklch(0.72 0.16 45 / 0.35);
-}
+  .button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
 
-.button:hover::before {
-  left: 100%;
-}
+  .button:active:not(:disabled, [aria-disabled="true"]) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 25%, transparent);
+  }
 
-.button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px oklch(0.72 0.16 45 / 0.25);
-}
+  /* Hover effects only where hover exists; avoids sticky :hover on touch. */
+  @media (hover: hover) {
+    .button:hover:not(:disabled, [aria-disabled="true"]) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px
+        color-mix(in oklch, var(--primary) 35%, transparent);
+    }
 
-.button-secondary {
-  background: transparent;
-  border: 1.5px solid var(--border);
-  color: var(--foreground);
-  box-shadow: none;
-}
+    .button:hover:not(:disabled, [aria-disabled="true"])::before {
+      transform: translateX(100%);
+    }
+  }
 
-.button-secondary:hover {
-  background: var(--secondary);
-  border-color: var(--primary);
-  transform: translateY(-2px);
+  /* Legible disabled state (a real surface, not just reduced opacity). */
+  .button:disabled,
+  .button[aria-disabled="true"] {
+    background: var(--muted);
+    border-color: var(--border);
+    color: var(--muted-foreground);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .button-secondary {
+    background: transparent;
+    border-color: var(--input-border);
+    color: var(--foreground);
+    box-shadow: none;
+  }
+
+  .button-secondary::before {
+    display: none;
+  }
+
+  @media (hover: hover) {
+    .button-secondary:hover:not(:disabled, [aria-disabled="true"]) {
+      background: var(--secondary);
+      border-color: var(--ring);
+      box-shadow: none;
+    }
+  }
+
+  .button-secondary:active:not(:disabled, [aria-disabled="true"]) {
+    box-shadow: none;
+  }
 }
 
 .card {
@@ -241,25 +322,97 @@ h6 {
   border-color: oklch(0.72 0.16 45 / 0.3);
 }
 
-input,
-textarea,
-select {
-  background: var(--input);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  padding: 0.875rem 1.25rem;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  width: 100%;
-}
+/* Form fields.
+   - Specificity is deliberately (0,0,1): it ties with Tailwind's preflight
+     reset (input { padding: 0 }) and wins on source order, while any utility
+     class (0,1,0) still overrides these defaults. A fully :where()-wrapped
+     selector would lose to the preflight reset and silently drop padding.
+   - Checkbox/radio/range/file/button inputs are excluded (they used to be
+     stretched to width:100% with text-field padding).
+   - The border is --input-border (3:1), text is --foreground, placeholder is
+     --muted-foreground (both >= 4.5:1 on the field surface).
+   - Focus is a real outline (visible in forced-colors mode, unlike a
+     box-shadow), and only for :focus-visible.
+   - font-size stays >= 16px so iOS Safari doesn't zoom on focus. */
+@layer base {
+  input:where(
+      :not(
+          [type="checkbox"],
+          [type="radio"],
+          [type="range"],
+          [type="file"],
+          [type="color"],
+          [type="submit"],
+          [type="button"],
+          [type="reset"],
+          [type="image"]
+        )
+    ),
+  textarea,
+  select {
+    inline-size: 100%;
+    min-block-size: 3rem; /* 48px touch target */
+    padding: 0.75rem 1rem;
+    background-color: var(--input);
+    color: var(--foreground);
+    caret-color: var(--ring);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    line-height: 1.5;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--ring);
-  box-shadow: var(--ring-glow);
-  background: var(--card);
+  /* Same specificity as Tailwind's preflight rule, and later, so it wins. */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 1;
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  @media (hover: hover) {
+    :where(input, textarea, select):hover:not(
+        :disabled,
+        :focus-visible,
+        :user-invalid,
+        [aria-invalid="true"]
+      ) {
+      border-color: color-mix(in oklch, var(--input-border), var(--foreground) 35%);
+    }
+  }
+
+  :where(input, textarea, select):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 0;
+    border-color: var(--ring);
+    background-color: var(--card);
+  }
+
+  /* :user-invalid only fires after the user has interacted, so pristine
+     required fields aren't painted red on load. */
+  :where(input, textarea, select):user-invalid,
+  :where(input, textarea, select)[aria-invalid="true"] {
+    border-color: var(--destructive);
+  }
+
+  :where(input, textarea, select):user-invalid:focus-visible,
+  :where(input, textarea, select)[aria-invalid="true"]:focus-visible {
+    outline-color: var(--destructive);
+  }
+
+  :where(input, textarea, select):disabled {
+    background-color: var(--muted);
+    border-color: var(--border);
+    color: var(--muted-foreground);
+    cursor: not-allowed;
+  }
 }
 
 .badge {
@@ -275,13 +428,19 @@ select:focus {
 }
 
 .badge-primary {
-  background: oklch(0.72 0.16 45 / 0.1);
-  color: var(--primary);
-  border-color: oklch(0.72 0.16 45 / 0.2);
+  background: color-mix(in oklch, var(--primary) 10%, transparent);
+  color: var(--primary-text);
+  border-color: color-mix(in oklch, var(--primary) 30%, transparent);
 }
 
+/* Text-safe gradient: --gradient-primary is a light fill and fails contrast
+   when used as text, so this stays within the --primary-text range. */
 .text-gradient {
-  background: var(--gradient-primary);
+  background: linear-gradient(
+    135deg,
+    var(--primary-text),
+    color-mix(in oklch, var(--primary-text), var(--foreground) 40%)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -302,17 +461,6 @@ select:focus {
 
 .mesh-gradient {
   background-image: var(--gradient-mesh);
-}
-
-.subheading::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: currentColor;
-  transition: transform 0.3s ease;
 }
 
 @layer utilities {
@@ -420,15 +568,18 @@ select:focus {
   height: auto;
 }
 
+/* Links are distinguishable without relying on colour alone (WCAG 1.4.1):
+   a persistent underline that thickens on hover. */
 .prose a {
-  color: var(--primary);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
+  color: var(--primary-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--primary-text) 45%, transparent);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.2s ease;
 }
 
 .prose a:hover {
-  border-bottom-color: var(--primary);
+  text-decoration-color: currentColor;
 }
 
 /* Blog card improvements */
@@ -449,7 +600,7 @@ select:focus {
 /* Read more button */
 .read-more-btn {
   background: transparent;
-  color: var(--primary);
+  color: var(--primary-text);
   padding: 0.5rem 0;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -460,7 +611,7 @@ select:focus {
 
 .read-more-btn:hover {
   gap: 0.75rem;
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 /* Blog meta information */
@@ -631,5 +782,32 @@ select:focus {
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+/* Respect the OS "reduce motion" setting: no lifts, shimmers, pulses or
+   bouncing dots; state changes stay instant instead. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .button:hover,
+  .button-secondary:hover {
+    transform: none !important;
+  }
+}
+
+/* Windows High Contrast / forced-colors: box-shadows and gradients are
+   stripped, so controls must keep a real border. */
+@media (forced-colors: active) {
+  .button,
+  .button-secondary {
+    border-color: ButtonText;
   }
 }

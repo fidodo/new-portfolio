@@ -10,7 +10,10 @@ const config: Config = {
     extend: {
       colors: {
         border: "var(--border)",
-        input: "var(--input)",
+        input: {
+          DEFAULT: "var(--input)",
+          border: "var(--input-border)",
+        },
         ring: "var(--ring)",
         background: "oklch(var(--background-raw) / <alpha-value>)",
         foreground: "var(--foreground)",
@@ -39,6 +42,19 @@ const config: Config = {
           foreground: "var(--card-foreground)",
         },
         success: "var(--success)",
+      },
+      // Only the text-* utilities: text-primary resolves to the darker
+      // --primary-text (>= 4.5:1 on the page) while bg-primary, border-primary
+      // and ring-primary keep the lighter --primary fill colour.
+      textColor: {
+        primary: {
+          DEFAULT: "oklch(var(--primary-text-raw) / <alpha-value>)",
+          foreground: "var(--primary-foreground)",
+          // For text on Tailwind `dark:` surfaces (dark:bg-[#1a1a1a] etc.).
+          // Those follow the OS colour scheme, but the .dark token block does
+          // not, so the light-theme --primary-text would be ~2.3:1 there.
+          "on-dark": "oklch(0.82 0.14 45 / <alpha-value>)",
+        },
       },
       ringColor: {
         DEFAULT: "var(--ring)",

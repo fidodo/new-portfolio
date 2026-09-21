@@ -80,7 +80,7 @@ export default function Hero() {
               View My Work
             </a>
 
-            <a href="#contact" className="button">
+            <a href="#contact" className="button button-secondary">
               Get in Touch
             </a>
           </motion.div>

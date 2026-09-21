@@ -212,7 +212,7 @@ const ProjectLinks = memo(
         rel="noopener noreferrer"
         whileHover={{ x: 5 }}
         whileTap={{ scale: 0.95 }}
-        className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors group/link"
+        className="inline-flex items-center gap-2 text-primary hover:text-primary/80 dark:text-primary-on-dark dark:hover:text-primary-on-dark/80 font-medium transition-colors group/link"
       >
         <span>View Project</span>
         <FiExternalLink className="w-4 h-4 transition-all duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
@@ -228,7 +228,7 @@ const ProjectLinks = memo(
           className="p-2 bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors"
           aria-label="View Source Code"
         >
-          <FiGithub className="w-5 h-5 text-primary" />
+          <FiGithub className="w-5 h-5 text-primary dark:text-primary-on-dark" />
         </motion.a>
       )}
     </div>
@@ -244,7 +244,7 @@ const StatusBadge = memo(
       initial="hidden"
       animate="visible"
       whileHover="hover"
-      className="absolute top-3 right-3 px-3 py-1.5 bg-gradient-to-r from-primary to-primary/80 text-white rounded-full text-xs font-medium shadow-lg z-10 backdrop-blur-sm"
+      className="absolute top-3 right-3 px-3 py-1.5 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full text-xs font-medium shadow-lg z-10 backdrop-blur-sm"
       title={`Status: ${status}`}
     >
       {status}
@@ -337,7 +337,7 @@ export default function Projects() {
                   whileInView={{ opacity: 1, y: 0 }}
                   className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
                 >
-                  <span className="bg-white dark:bg-gray-900 text-primary px-5 py-2.5 rounded-full text-sm font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                  <span className="bg-white dark:bg-gray-900 text-primary dark:text-primary-on-dark px-5 py-2.5 rounded-full text-sm font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                     Live Preview →
                   </span>
                 </motion.a>
@@ -345,7 +345,7 @@ export default function Projects() {
 
               {/* Content */}
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-primary mb-2 line-clamp-1">
+                <h3 className="text-xl font-semibold text-primary dark:text-primary-on-dark mb-2 line-clamp-1">
                   {project.title}
                 </h3>
 

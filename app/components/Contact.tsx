@@ -165,9 +165,9 @@ export default function Contact() {
               type="text"
               id="name"
               name="name"
+              autoComplete="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             />
           </motion.div>
@@ -184,9 +184,9 @@ export default function Contact() {
               type="email"
               id="email"
               name="email"
+              autoComplete="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             />
           </motion.div>
@@ -206,7 +206,6 @@ export default function Contact() {
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900"
               required
             ></textarea>
           </motion.div>
@@ -223,10 +222,12 @@ export default function Contact() {
           </motion.button>
 
           {submitStatus === "success" && (
-            <p className="text-green-600">Message sent successfully!</p>
+            <p role="status" className="text-success">
+              Message sent successfully!
+            </p>
           )}
           {submitStatus === "error" && (
-            <p className="text-red-600">
+            <p role="alert" className="text-destructive">
               Failed to send message. Please try again.
             </p>
           )}

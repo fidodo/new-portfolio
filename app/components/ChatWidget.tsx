@@ -150,13 +150,14 @@ export default function ChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about experience, skills..."
-              className="flex-1 px-4 py-2 bg-input border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+              aria-label="Message"
+              className="flex-1 min-w-0"
               disabled={isLoading}
             />
             <button
               onClick={sendMessage}
               disabled={isLoading || !input.trim()}
-              className="bg-primary text-primary-foreground p-2 rounded-xl transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex h-12 w-12 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-xl transition-colors hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
               aria-label="Send message"
             >
               <Send size={20} />

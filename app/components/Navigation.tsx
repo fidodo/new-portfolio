@@ -74,7 +74,7 @@ export default function Navigation() {
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors
                     ${
                       activeSection === id
-                        ? "text-white bg-primary"
+                        ? "text-primary-foreground bg-primary"
                         : "text-foreground hover:text-primary"
                     }`}
                 >
@@ -99,8 +99,8 @@ export default function Navigation() {
               className={`flex flex-col items-center justify-center px-2 py-1 rounded-md transition-colors relative
                 ${
                   activeSection === id
-                    ? "text-primary"
-                    : "text-gray-600 dark:text-gray-400 hover:text-primary"
+                    ? "text-primary dark:text-primary-on-dark"
+                    : "text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-on-dark"
                 }`}
             >
               {activeSection === id && (

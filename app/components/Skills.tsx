@@ -99,7 +99,7 @@ export default function Skills() {
               transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
               className="p-5 bg-card dark:bg-[#1a1a1a] rounded-xl shadow-md border border-border dark:border-[#2a2a2a]"
             >
-              <h3 className="text-lg font-semibold text-primary mb-4 capitalize">
+              <h3 className="text-lg font-semibold text-primary dark:text-primary-on-dark mb-4 capitalize">
                 {category}
               </h3>
               <ul className="space-y-3">
