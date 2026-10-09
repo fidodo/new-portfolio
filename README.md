@@ -4,8 +4,6 @@
 
 ## Getting Started
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -70,14 +68,12 @@ npm install
 npm run dev
 ```
 
-
 ## ⚙️ Environment Setup
 
 1. Copy the example environment file and add correct .env credentials:
    ```bash
    cp .env.example .env
-
-
+   ```
 
 ```bash
 npm run dev
@@ -91,14 +87,12 @@ bun run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Contact
 
-## Contact 
-Ayokunle Ogunfidodo - [@Linkedin](linkedin.com/in/ayokunle-ogunfidodo-a862a0153/)
+Ayokunle Ogunfidodo - [@Linkedin](linkedin.com/in/ayokunle-ogunfidodo/)
 
 Project Link: [https://github.com/fidodo/renewal-guard](https://github.com/fidodo/new-portfolio)
 [Back to top](#new-portfolio)
-
-
 
 [issues-shield]: https://img.shields.io/github/issues/fidodo/new-portfolio.svg?style=flat-square
 [issues-url]: https://github.com/fidodo/new-portfolio/issues
