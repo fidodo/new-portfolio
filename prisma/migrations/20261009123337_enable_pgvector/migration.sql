@@ -1,0 +1,3 @@
+-- CreateExtension
+-- PostgreSQL-only statement; omit in non-PostgreSQL environments.
+-- CREATE EXTENSION IF NOT EXISTS "vector";

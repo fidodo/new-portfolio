@@ -1,60 +1,44 @@
 // scripts/ingest-data.ts
 import fs from "fs";
 import path from "path";
-import OpenAI from "openai";
+import crypto from "crypto";
+import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
+import { PrismaClient } from "@prisma/client";
+import {
+  EMBEDDING_MODEL,
+  EMBEDDING_DIMENSIONS,
+} from "../app/lib/embeddingConfig";
 
 // Get __dirname equivalent in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const projectRoot = path.join(__dirname, "..");
 
-// Load environment variables - EXPLICITLY from project root
-const envPath = path.join(__dirname, "..", ".env.local");
-console.log(`📁 Looking for .env.local at: ${envPath}`);
+// DATABASE_URL/DIRECT_URL live in .env, other secrets (GEMINI_API_KEY, etc.)
+// live in .env.local - load both since this script runs outside Next.js,
+// which would otherwise load them automatically.
+dotenv.config({ path: path.join(projectRoot, ".env") });
+dotenv.config({ path: path.join(projectRoot, ".env.local") });
 
-// Check if file exists
-if (!fs.existsSync(envPath)) {
-  console.error("❌ .env.local file not found!");
-  console.error("Please create .env.local in the project root with:");
-  console.error("OPENAI_API_KEY=your_api_key_here");
+if (!process.env.GEMINI_API_KEY) {
+  console.error("❌ GEMINI_API_KEY not found in .env.local");
   process.exit(1);
 }
 
-// Load the environment variables
-const result = dotenv.config({ path: envPath });
-
-if (result.error) {
-  console.error("❌ Error loading .env.local:", result.error);
-  process.exit(1);
-}
-
-// Verify the API key is loaded
-if (!process.env.OPENAI_API_KEY) {
-  console.error("❌ OPENAI_API_KEY not found in .env.local");
-  console.error("Please add: OPENAI_API_KEY=your_api_key_here");
+if (!process.env.DATABASE_URL) {
+  console.error("❌ DATABASE_URL not found in .env");
   process.exit(1);
 }
 
 console.log("✅ Environment variables loaded successfully");
-console.log(
-  `🔑 API Key found: ${process.env.OPENAI_API_KEY.substring(0, 10)}...`,
-);
 
-// Load environment variables
-dotenv.config({ path: ".env.local" });
-
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const gemini = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
-// Define types for our data structure
-interface Chunk {
-  id: string;
-  text: string;
-  embedding: number[];
-}
+const prisma = new PrismaClient();
 
 /**
  * Step 1: Read the data file
@@ -127,34 +111,62 @@ function chunkText(text: string, maxChunkSize: number = 800): string[] {
  * Step 3: Generate embeddings for chunks
  * Why: Embeddings capture semantic meaning, enabling semantic search
  *
- * We use text-embedding-ada-002 because:
- * - Cost-effective: ~$0.0001 per 1000 tokens
- * - Fast: Low latency
- * - Good quality: 1536-dimensional vectors capture nuance well
- * - Easy to use: Standard embedding model for most use cases
+ * outputDimensionality is pinned to EMBEDDING_DIMENSIONS so every vector
+ * matches the vector(1536) column, regardless of the model's native size.
  */
 async function generateEmbeddings(texts: string[]): Promise<number[][]> {
   const embeddings: number[][] = [];
 
   // Process in batches to avoid rate limits
-  const batchSize = 20;
+  const batchSize = 10;
   for (let i = 0; i < texts.length; i += batchSize) {
     const batch = texts.slice(i, i + batchSize);
     console.log(
       `Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(texts.length / batchSize)}`,
     );
 
-    const response = await openai.embeddings.create({
-      model: "text-embedding-ada-002",
-      input: batch,
+    const response = await gemini.models.embedContent({
+      model: EMBEDDING_MODEL,
+      contents: batch,
+      config: {
+        outputDimensionality: EMBEDDING_DIMENSIONS,
+        taskType: "RETRIEVAL_DOCUMENT",
+      },
     });
 
-    // Extract embeddings from response
-    const batchEmbeddings = response.data.map((item) => item.embedding);
+    const batchEmbeddings = (response.embeddings ?? []).map((item) => {
+      if (!item.values) throw new Error("Embedding response missing values");
+      return item.values;
+    });
     embeddings.push(...batchEmbeddings);
   }
 
   return embeddings;
+}
+
+/**
+ * Step 4: Replace the stored chunks with the freshly embedded ones
+ * Why: Chunk boundaries shift whenever the source text changes, so there's
+ * no stable key to upsert against - clearing and re-inserting keeps the
+ * table consistent with portfolio-data.txt on every ingest run.
+ *
+ * The embedding column is Unsupported("vector(1536)") in schema.prisma
+ * (Prisma Client has no native vector type), so inserts go through
+ * $executeRaw with an explicit ::vector cast.
+ */
+async function saveChunks(texts: string[], embeddings: number[][]) {
+  await prisma.$transaction(async (tx) => {
+    await tx.portfolioChunk.deleteMany({});
+
+    for (let i = 0; i < texts.length; i++) {
+      const id = crypto.randomUUID();
+      const vectorLiteral = `[${embeddings[i].join(",")}]`;
+      await tx.$executeRaw`
+        INSERT INTO "PortfolioChunk" (id, content, embedding, "createdAt", "updatedAt")
+        VALUES (${id}, ${texts[i]}, ${vectorLiteral}::vector, now(), now())
+      `;
+    }
+  });
 }
 
 /**
@@ -177,23 +189,17 @@ async function ingestData() {
   console.log("🧠 Generating embeddings...");
   const embeddings = await generateEmbeddings(chunks);
 
-  // Step 4: Combine chunks and embeddings
-  console.log("💾 Combining data...");
-  const data: Chunk[] = chunks.map((text, index) => ({
-    id: `chunk_${index}`,
-    text: text,
-    embedding: embeddings[index],
-  }));
+  // Step 4: Save to the database
+  console.log("💾 Replacing PortfolioChunk rows in the database...");
+  await saveChunks(chunks, embeddings);
 
-  // Step 5: Save to JSON file
-  console.log("💾 Saving embeddings to file...");
-  const outputPath = path.join(process.cwd(), "data", "embeddings.json");
-  fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
-
-  console.log(
-    `✅ Ingestion complete! Saved ${data.length} chunks to ${outputPath}`,
-  );
+  console.log(`✅ Ingestion complete! Saved ${chunks.length} chunks to PortfolioChunk`);
 }
 
 // Run the ingestion
-ingestData().catch(console.error);
+ingestData()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(() => prisma.$disconnect());

@@ -1,11 +1,14 @@
 // prisma/schema.prisma
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
 }
 
 model ContactMessage {
@@ -19,7 +22,15 @@ model ContactMessage {
 model BlogPost {
   id        String   @id @default(cuid())
   title     String
-  content   String   
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PortfolioChunk {
+  id        String                       @id @default(cuid())
+  content   String
+  embedding Unsupported("vector(1536)")?
+  createdAt DateTime                     @default(now())
+  updatedAt DateTime                     @updatedAt
 }

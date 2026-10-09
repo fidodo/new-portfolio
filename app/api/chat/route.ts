@@ -1,17 +1,12 @@
 // app/api/chat/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { PrismaClient } from "@prisma/client";
 import Groq from "groq-sdk";
 import { GoogleGenAI } from "@google/genai";
-import fs from "fs";
-import path from "path";
+import { EMBEDDING_MODEL, EMBEDDING_DIMENSIONS } from "../../lib/embeddingConfig";
 
-// OpenAI is only used for question embeddings; chat answers come from
-// Gemini, with Groq as a backup
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
+// Chat answers come from Gemini, with Groq as a backup. Gemini also
+// generates question embeddings for retrieval against PortfolioChunk.
 const gemini = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
@@ -20,86 +15,59 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-// Type for our data chunks
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const prisma = globalForPrisma.prisma || new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+console.log("🔧 Chat API initialized with Gemini, Groq, and Prisma clients");
+
 interface Chunk {
   id: string;
-  text: string;
-  embedding: number[];
-}
-console.log("🔧 Chat API initialized with OpenAI, Gemini and Groq clients");
-// Comprehensive mock data
-const MOCK_CHUNKS: Chunk[] = [
-  {
-    id: "chunk_0",
-    text: "Ayokunle Ogunfidodo is a Full-Stack Software Engineer with 5+ years experience building React, Next.js, and Node.js platforms. He worked at STR Global Oy from 2021-2026 building real-time operational dashboards. He has an MSc in Human-Technology Interaction and focuses on interfaces that are fast, accessible, and genuinely usable.",
-    embedding: [0.1, 0.2, 0.3, 0.4, 0.5],
-  },
-  {
-    id: "chunk_1",
-    text: "Frontend Skills: React (Advanced), Next.js (Advanced), TypeScript (Advanced), Tailwind CSS (Advanced), Astro, Vite, GSAP, SCSS, JavaScript. Backend Skills: Node.js (Intermediate), GraphQL (Intermediate), PostgreSQL (Intermediate), MongoDB (Intermediate), Firebase (Intermediate), Express.js (Intermediate), Prisma (Intermediate), Strapi (Intermediate).",
-    embedding: [0.1, 0.2, 0.3, 0.4, 0.5],
-  },
-  {
-    id: "chunk_2",
-    text: "AI/ML Skills: OpenAI API (Intermediate), Prompt Engineering (Intermediate), Hugging Face (Intermediate), LangChain (Intermediate), LLMOps (Intermediate). Ayokunle is actively building AI skills through DataCamp's Associate AI Engineer for Developers track.",
-    embedding: [0.1, 0.2, 0.3, 0.4, 0.5],
-  },
-  {
-    id: "chunk_3",
-    text: "Projects: Renewal Guard (Next.js, Tailwind CSS - license renewal tracker), Spending Tracker App (React, PostgreSQL - personal finance), AI Resume Assistant (Gemini API - chatbot about background), E-commerce Store (Next.js, MongoDB - full-stack CMS), AlhmanEdu Green Fields (React, Strapi - blog platform), Portfolio Website (Astro, Tailwind CSS).",
-    embedding: [0.1, 0.2, 0.3, 0.4, 0.5],
-  },
-  {
-    id: "chunk_4",
-    text: "Experience: STR Global Oy (2021-2026) - Full Stack Web Developer building OMS and WMS applications, improving operational efficiency and user experience. Kasvuhuoneilmiö × AhlmanEdu (2026) - Innovation Program Participant. Freelance (2018-Present) - Web Developer and UI/UX Designer.",
-    embedding: [0.1, 0.2, 0.3, 0.4, 0.5],
-  },
-  {
-    id: "chunk_5",
-    text: "Education: MSc in Human-Technology Interaction with focus on usability, accessibility, and user-centered design principles. Currently expanding into AI engineering through DataCamp's Associate AI Engineer for Developers track.",
-    embedding: [0.1, 0.2, 0.3, 0.4, 0.5],
-  },
-];
-
-// Load embeddings
-let embeddingsData: Chunk[] | null = null;
-
-function loadEmbeddings(): Chunk[] {
-  if (!embeddingsData) {
-    try {
-      console.log("Loading embeddings from file...");
-      const filePath = path.join(process.cwd(), "data", "embeddings.json");
-
-      if (fs.existsSync(filePath)) {
-        const fileContent = fs.readFileSync(filePath, "utf-8");
-        embeddingsData = JSON.parse(fileContent);
-        console.log(`✅ Loaded ${embeddingsData?.length} embeddings from file`);
-      } else {
-        console.log("⚠️ embeddings.json not found, using mock data");
-        embeddingsData = MOCK_CHUNKS;
-        console.log(`✅ Loaded ${embeddingsData?.length} mock chunks`);
-      }
-    } catch (error) {
-      console.error("Error loading embeddings:", error);
-      console.log("⚠️ Falling back to mock data");
-      embeddingsData = MOCK_CHUNKS;
-    }
-  }
-  return embeddingsData as Chunk[];
+  content: string;
 }
 
-// Keyword search fallback
-function keywordSearch(
-  query: string,
-  chunks: Chunk[],
-  topK: number = 3,
-): Chunk[] {
+/**
+ * Semantic search: embed the question (as a retrieval query, matching the
+ * RETRIEVAL_DOCUMENT embeddings produced by scripts/ingest-data.ts) and let
+ * pgvector's HNSW index find the closest PortfolioChunk rows by cosine
+ * distance (<=>).
+ */
+async function semanticSearch(question: string, topK = 3): Promise<Chunk[]> {
+  const embeddingResponse = await gemini.models.embedContent({
+    model: EMBEDDING_MODEL,
+    contents: question,
+    config: {
+      outputDimensionality: EMBEDDING_DIMENSIONS,
+      taskType: "RETRIEVAL_QUERY",
+    },
+  });
+
+  const questionEmbedding = embeddingResponse.embeddings?.[0]?.values;
+  if (!questionEmbedding) throw new Error("Embedding response missing values");
+
+  const vectorLiteral = `[${questionEmbedding.join(",")}]`;
+
+  return prisma.$queryRaw<Chunk[]>`
+    SELECT id, content
+    FROM "PortfolioChunk"
+    ORDER BY embedding <=> ${vectorLiteral}::vector
+    LIMIT ${topK}
+  `;
+}
+
+// Keyword search fallback, used when embedding generation fails
+async function keywordSearch(query: string, topK: number = 3): Promise<Chunk[]> {
   console.log("🔍 Using keyword search");
+
+  const chunks = await prisma.portfolioChunk.findMany({
+    select: { id: true, content: true },
+  });
 
   const queryWords = query.toLowerCase().split(/\s+/);
 
   const scored = chunks.map((chunk) => {
-    const chunkText = chunk.text.toLowerCase();
+    const chunkText = chunk.content.toLowerCase();
     let score = 0;
 
     if (chunkText.includes(query.toLowerCase())) {
@@ -160,7 +128,7 @@ function generateFallbackResponse(
     return "I don't have information about that in my portfolio. Feel free to ask about Ayokunle's experience, skills, projects, or education!";
   }
 
-  const contextText = relevantChunks.map((c) => c.text).join(" ");
+  const contextText = relevantChunks.map((c) => c.content).join(" ");
   const questionLower = question.toLowerCase();
   const hasWord = (...words: string[]) =>
     new RegExp(`\\b(${words.join("|")})\\b`).test(questionLower);
@@ -290,44 +258,27 @@ export async function POST(request: NextRequest) {
 
     console.log(`📝 Received question: "${question}"`);
 
-    // Load embeddings (or mock data)
-    const chunks = loadEmbeddings();
-
     // Find relevant chunks
     let relevantChunks: Chunk[] = [];
 
     try {
-      // Try to use semantic search with embeddings
-      console.log("🧠 Attempting to generate question embedding...");
-      const embeddingResponse = await openai.embeddings.create({
-        model: "text-embedding-ada-002",
-        input: question,
-      });
-      const questionEmbedding = embeddingResponse.data[0].embedding;
-      console.log("✅ Successfully generated embedding");
-
-      // Use cosine similarity
-      const similarities = chunks.map((chunk) => ({
-        ...chunk,
-        similarity: cosineSimilarity(questionEmbedding, chunk.embedding),
-      }));
-      similarities.sort((a, b) => (b.similarity || 0) - (a.similarity || 0));
-      relevantChunks = similarities.slice(0, 3);
+      console.log("🧠 Attempting semantic search...");
+      relevantChunks = await semanticSearch(question);
+      console.log("✅ Semantic search succeeded");
     } catch (error: any) {
-      // If embeddings fail, use keyword search
-      console.log(`⚠️ Embedding failed, using keyword search`);
-      relevantChunks = keywordSearch(question, chunks);
+      console.log(`⚠️ Semantic search failed: ${error.message || error}`);
+      relevantChunks = await keywordSearch(question);
     }
 
     console.log(`✅ Found ${relevantChunks.length} relevant chunks`);
 
     // Build context
     const context = relevantChunks
-      .map((chunk, index) => `[Context ${index + 1}]:\n${chunk.text}`)
+      .map((chunk, index) => `[Context ${index + 1}]:\n${chunk.content}`)
       .join("\n\n---\n\n");
 
     // Build prompt
-    const systemPrompt = `You are a friendly, professional assistant for Ayokunle Ogunfidodo's portfolio website. 
+    const systemPrompt = `You are a friendly, professional assistant for Ayokunle Ogunfidodo's portfolio website.
 Your purpose is to help visitors learn about Ayokunle's background, skills, projects, and experience.
 
 IMPORTANT RULES:
@@ -370,23 +321,4 @@ Answer:`;
       { status: 200 },
     );
   }
-}
-
-// Helper: cosine similarity
-function cosineSimilarity(a: number[], b: number[]): number {
-  let dotProduct = 0;
-  let normA = 0;
-  let normB = 0;
-
-  for (let i = 0; i < a.length; i++) {
-    dotProduct += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
-  }
-
-  if (normA === 0 || normB === 0) {
-    return 0;
-  }
-
-  return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
