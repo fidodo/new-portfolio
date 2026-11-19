@@ -193,7 +193,9 @@ async function ingestData() {
   console.log("💾 Replacing PortfolioChunk rows in the database...");
   await saveChunks(chunks, embeddings);
 
-  console.log(`✅ Ingestion complete! Saved ${chunks.length} chunks to PortfolioChunk`);
+  console.log(
+    `✅ Ingestion complete! Saved ${chunks.length} chunks to PortfolioChunk`,
+  );
 }
 
 // Run the ingestion

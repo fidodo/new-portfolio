@@ -34,3 +34,51 @@ model PortfolioChunk {
   createdAt DateTime                     @default(now())
   updatedAt DateTime                     @updatedAt
 }
+
+model ExperienceEntry {
+  id          String   @id @default(cuid())
+  title       String
+  company     String
+  period      String
+  description String
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SkillEntry {
+  id        String   @id @default(cuid())
+  category  String
+  name      String
+  level     String
+  icon      String
+  status    String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CertificationEntry {
+  id         String    @id @default(cuid())
+  name       String
+  issuer     String
+  status     String
+  issuedDate DateTime?
+  url        String?
+  sortOrder  Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model PendingResumeChange {
+  id           String    @id @default(cuid())
+  targetType   String
+  targetId     String?
+  changeType   String
+  proposedData Json
+  previousData Json?
+  sourceNote   String
+  status       String    @default("pending")
+  createdAt    DateTime  @default(now())
+  reviewedAt   DateTime?
+}
