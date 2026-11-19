@@ -32,6 +32,16 @@ export default function AdminPage() {
   );
   const [showPdfReminder, setShowPdfReminder] = useState(false);
 
+  const [coverRole, setCoverRole] = useState("");
+  const [coverCompany, setCoverCompany] = useState("");
+  const [coverJobUrl, setCoverJobUrl] = useState("");
+  const [coverJobDescription, setCoverJobDescription] = useState("");
+  const [coverLetter, setCoverLetter] = useState("");
+  const [isGeneratingCoverLetter, setIsGeneratingCoverLetter] = useState(false);
+  const [coverLetterStatus, setCoverLetterStatus] = useState("");
+  const [coverLetterJobUrlWarning, setCoverLetterJobUrlWarning] = useState("");
+  const [coverLetterCopied, setCoverLetterCopied] = useState(false);
+
   const router = useRouter();
 
   const loadPendingChanges = async () => {
@@ -97,6 +107,65 @@ export default function AdminPage() {
     } catch (error) {
       console.error(`Error applying ${action}:`, error);
     }
+  };
+
+  const handleGenerateCoverLetter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsGeneratingCoverLetter(true);
+    setCoverLetterStatus("Drafting cover letter...");
+    setCoverLetterCopied(false);
+    setCoverLetterJobUrlWarning("");
+
+    try {
+      const res = await fetch("/api/admin/cover-letter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: coverRole,
+          company: coverCompany,
+          jobUrl: coverJobUrl,
+          jobDescription: coverJobDescription,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setCoverLetterStatus(data.error || "Failed to generate cover letter");
+      } else {
+        setCoverLetter(data.letter);
+        setCoverLetterStatus("");
+        setCoverLetterJobUrlWarning(data.jobUrlWarning || "");
+      }
+    } catch (error) {
+      console.error("Error generating cover letter:", error);
+      setCoverLetterStatus("Failed to generate cover letter");
+    } finally {
+      setIsGeneratingCoverLetter(false);
+    }
+  };
+
+  const handleCopyCoverLetter = async () => {
+    try {
+      await navigator.clipboard.writeText(coverLetter);
+      setCoverLetterCopied(true);
+      setTimeout(() => setCoverLetterCopied(false), 2000);
+    } catch (error) {
+      console.error("Error copying cover letter:", error);
+    }
+  };
+
+  const handleDownloadCoverLetter = () => {
+    const slug = (coverCompany || coverRole || "cover-letter")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    const blob = new Blob([coverLetter], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ayokunleogunfidodo-cover-letter-${slug || "draft"}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -338,6 +407,118 @@ export default function AdminPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white p-8 rounded-lg shadow-md mt-8">
+          <h2 className="text-2xl font-bold mb-2">Cover Letter Generator</h2>
+          <p className="text-sm text-gray-500 mb-6">
+            Drafts a cover letter from your current experience/skills data for
+            a specific role — review and edit before sending.
+          </p>
+
+          <form onSubmit={handleGenerateCoverLetter} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Role / job title
+              </label>
+              <input
+                type="text"
+                value={coverRole}
+                onChange={(e) => setCoverRole(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g. Senior Frontend Engineer"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Company (optional)
+              </label>
+              <input
+                type="text"
+                value={coverCompany}
+                onChange={(e) => setCoverCompany(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g. Acme Inc."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Job posting URL (optional)
+              </label>
+              <input
+                type="url"
+                value={coverJobUrl}
+                onChange={(e) => setCoverJobUrl(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="https://..."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                We&apos;ll read the requirements straight from the page. If a
+                site won&apos;t let us read it (common on JS-heavy listings),
+                paste the description below instead.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Job description (optional, improves relevance)
+              </label>
+              <textarea
+                value={coverJobDescription}
+                onChange={(e) => setCoverJobDescription(e.target.value)}
+                rows={5}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Paste the job posting here, or add extra notes alongside the URL above..."
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isGeneratingCoverLetter}
+              className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+            >
+              {isGeneratingCoverLetter ? "Drafting..." : "Generate Cover Letter"}
+            </button>
+            {coverLetterStatus && (
+              <div className="text-center text-sm text-gray-600">
+                {coverLetterStatus}
+              </div>
+            )}
+          </form>
+
+          {coverLetterJobUrlWarning && (
+            <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mt-6">
+              {coverLetterJobUrlWarning}
+            </p>
+          )}
+
+          {coverLetter && (
+            <div className="mt-6 space-y-3">
+              <textarea
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
+                rows={14}
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={handleCopyCoverLetter}
+                  className="px-4 py-2 text-sm bg-gray-800 text-white rounded-lg hover:bg-gray-900"
+                >
+                  {coverLetterCopied ? "Copied!" : "Copy to clipboard"}
+                </button>
+                <button
+                  onClick={handleDownloadCoverLetter}
+                  className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-100"
+                >
+                  Download .txt
+                </button>
+              </div>
             </div>
           )}
         </div>

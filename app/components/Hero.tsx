@@ -204,7 +204,11 @@ export default function Hero() {
           <a href="#contact" className="button button-secondary">
             Get in Touch
           </a>
-          <a href="/resume.pdf" download className="button button-secondary">
+          <a
+            href="/resume.pdf"
+            download="ayokunleogunfidodo.pdf"
+            className="button button-secondary"
+          >
             Download Resume
           </a>
         </div>
