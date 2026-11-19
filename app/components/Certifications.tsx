@@ -29,50 +29,47 @@ export default function Certifications() {
   if (certifications.length === 0) return null;
 
   return (
-    <section id="certifications" className="section">
+    <section id="certifications" className="section py-12">
       <motion.div
         variants={fadeUp}
         initial="hidden"
         animate="visible"
         className="max-w-4xl mx-auto"
       >
-        <h2 className="heading text-center mb-2">Certifications & Licenses</h2>
-        <p className="subheading text-center mb-8">
-          Credentials I&apos;ve earned or am working toward
-        </p>
+        <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-4">
+          Certifications & Licenses
+        </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
           {certifications.map((cert, index) => (
             <motion.div
               key={cert.id}
-              variants={fadeUpDelayed(index * 0.1)}
+              variants={fadeUpDelayed(index * 0.08)}
               initial="hidden"
               animate="visible"
-              className="p-5 bg-card rounded-xl shadow-md border border-border flex items-start gap-4"
+              className="flex items-center gap-3 py-3 border-b border-border last:border-b-0"
             >
-              <FiAward className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <h3 className="font-semibold text-card-foreground">
+              <FiAward className="h-4 w-4 text-primary flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <span className="font-medium text-foreground">
                   {cert.name}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-1">
-                  {cert.issuer}
-                </p>
-                <p className="text-sm text-primary font-medium">
-                  {cert.status}
-                </p>
-                {cert.url && (
-                  <a
-                    href={cert.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 mt-2"
-                  >
-                    View credential
-                    <FiExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                )}
+                </span>
+                <span className="text-muted-foreground"> — {cert.issuer}</span>
               </div>
+              <span className="text-sm text-primary font-medium flex-shrink-0">
+                {cert.status}
+              </span>
+              {cert.url && (
+                <a
+                  href={cert.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View credential: ${cert.name}`}
+                  className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0"
+                >
+                  <FiExternalLink className="w-4 h-4" />
+                </a>
+              )}
             </motion.div>
           ))}
         </div>

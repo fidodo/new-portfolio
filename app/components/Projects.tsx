@@ -31,6 +31,7 @@ interface Project {
   id: string;
   title: string;
   description: string;
+  impact?: string;
   tech: readonly string[];
   link: string;
   image?: string;
@@ -75,6 +76,8 @@ const PROJECTS: readonly Project[] = [
     title: "InterviewPal",
     description:
       "An AI-powered interview-prep platform: practice technical interviews by voice or code with instant AI scoring, target-role mock interviews, a system-design canvas, and a RAG Lab for building and grading your own retrieval chatbot.",
+    impact:
+      "Shipped solo: a full-stack TypeScript app orchestrating multiple LLM providers behind one interface, from auth to voice-based scoring.",
     tech: [
       "React",
       "TypeScript",
@@ -115,6 +118,8 @@ const PROJECTS: readonly Project[] = [
     title: "Spending Tracker App",
     description:
       "A personal finance tracker to monitor monthly expenses, loans, bills and budgets.",
+    impact:
+      "Built receipt OCR (tesseract.js) and interactive spending charts from scratch for real personal use, not a tutorial clone.",
     tech: [
       "React",
       "Javascript",
@@ -126,6 +131,7 @@ const PROJECTS: readonly Project[] = [
     link: "https://github.com/fidodo/spending-tracker",
     image: "/projects/monthly-spending.webp",
     github: "https://github.com/fidodo/spending-tracker",
+    featured: true,
     year: 2026,
   },
 
@@ -255,12 +261,60 @@ const StatusBadge = memo(
 
 StatusBadge.displayName = "StatusBadge";
 
+const SecondaryProjectRow = memo(({ project }: { project: Project }) => (
+  <a
+    href={project.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="group flex items-center justify-between gap-4 py-4 border-b border-border last:border-b-0 hover:bg-secondary/40 -mx-3 px-3 rounded-lg transition-colors"
+  >
+    <div className="min-w-0">
+      <div className="flex items-center gap-2">
+        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+          {project.title}
+        </h3>
+        {project.status && (
+          <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+            {project.status}
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-muted-foreground line-clamp-1">
+        {project.description}
+      </p>
+    </div>
+    <div className="flex items-center gap-3 flex-shrink-0">
+      <span className="hidden sm:flex gap-1.5">
+        {project.tech.slice(0, 3).map((tech) => {
+          const config = TECH_CONFIG[tech];
+          if (!config) return null;
+          const Icon = config.icon;
+          return (
+            <Icon
+              key={tech}
+              className="w-4 h-4"
+              style={{ color: config.color }}
+              title={tech}
+            />
+          );
+        })}
+      </span>
+      <FiExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+    </div>
+  </a>
+));
+
+SecondaryProjectRow.displayName = "SecondaryProjectRow";
+
 // ============ MAIN COMPONENT ============
 export default function Projects() {
-  const sortedProjects = useMemo(
-    () => [...PROJECTS].sort((a, b) => (b.year || 0) - (a.year || 0)),
-    [],
-  );
+  const { featuredProjects, secondaryProjects } = useMemo(() => {
+    const sorted = [...PROJECTS].sort((a, b) => (b.year || 0) - (a.year || 0));
+    return {
+      featuredProjects: sorted.filter((p) => p.featured),
+      secondaryProjects: sorted.filter((p) => !p.featured),
+    };
+  }, []);
 
   const handleImageError = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -294,7 +348,7 @@ export default function Projects() {
           </p>
         </motion.div>
 
-        {/* Projects Grid */}
+        {/* Featured Projects */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -302,7 +356,7 @@ export default function Projects() {
           viewport={{ once: true, margin: "-50px" }}
           className="grid md:grid-cols-2 gap-8"
         >
-          {sortedProjects.map((project) => (
+          {featuredProjects.map((project) => (
             <motion.article
               key={project.id}
               variants={cardHover}
@@ -350,9 +404,15 @@ export default function Projects() {
                   {project.title}
                 </h3>
 
-                <p className="text-card-foreground/80 mb-4 line-clamp-3 leading-relaxed text-sm">
+                <p className="text-card-foreground/80 mb-2 line-clamp-3 leading-relaxed text-sm">
                   {project.description}
                 </p>
+
+                {project.impact && (
+                  <p className="text-sm text-primary/90 italic mb-4">
+                    {project.impact}
+                  </p>
+                )}
 
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -369,6 +429,26 @@ export default function Projects() {
             </motion.article>
           ))}
         </motion.div>
+
+        {/* More Projects */}
+        {secondaryProjects.length > 0 && (
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="mt-16"
+          >
+            <h3 className="text-sm font-medium uppercase tracking-wide text-muted-foreground mb-2">
+              More projects
+            </h3>
+            <div>
+              {secondaryProjects.map((project) => (
+                <SecondaryProjectRow key={project.id} project={project} />
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   );

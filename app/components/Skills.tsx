@@ -36,44 +36,35 @@ export default function Skills() {
           Technologies and tools I work with
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div className="space-y-7">
           {Object.entries(skills).map(([category, items], categoryIndex) => (
             <motion.div
               key={category}
-              variants={fadeUpDelayed(categoryIndex * 0.2)}
+              variants={fadeUpDelayed(categoryIndex * 0.08)}
               initial="hidden"
               animate="visible"
-              className="p-5 bg-card rounded-xl shadow-md border border-border"
             >
-              <h3 className="text-lg font-semibold text-primary mb-4 capitalize">
+              <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-3">
                 {category}
               </h3>
-              <ul className="space-y-3">
-                {items.map((skill, index) => {
+              <div className="flex flex-wrap gap-2">
+                {items.map((skill) => {
                   const Icon = HeroIcons[skill.icon as keyof typeof HeroIcons];
                   return (
-                    <motion.li
+                    <span
                       key={skill.id}
-                      className="flex items-center justify-between"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + index * 0.05 }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-sm text-card-foreground"
+                      title={skill.status ?? undefined}
                     >
-                      <div className="flex items-center gap-3">
-                        {Icon && (
-                          <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                        )}
-                        <span className="font-medium text-card-foreground">
-                          {skill.name}
-                        </span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {skill.level}
+                      {Icon && <Icon className="h-3.5 w-3.5 text-primary" />}
+                      {skill.name}
+                      <span className="text-muted-foreground text-xs">
+                        · {skill.level}
                       </span>
-                    </motion.li>
+                    </span>
                   );
                 })}
-              </ul>
+              </div>
             </motion.div>
           ))}
         </div>

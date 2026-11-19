@@ -27,6 +27,26 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // The Hero section's inline chat teaser hands off its Q&A here instead of
+  // duplicating chat state — see app/components/Hero.tsx's openFullChat.
+  useEffect(() => {
+    const handleOpenChat = (e: Event) => {
+      const { question, answer } = (e as CustomEvent<{
+        question: string;
+        answer: string;
+      }>).detail;
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", content: question },
+        { role: "assistant", content: answer },
+      ]);
+      setIsOpen(true);
+    };
+    window.addEventListener("portfolio-open-chat", handleOpenChat);
+    return () =>
+      window.removeEventListener("portfolio-open-chat", handleOpenChat);
+  }, []);
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 

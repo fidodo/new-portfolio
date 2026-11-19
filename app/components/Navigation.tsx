@@ -65,19 +65,19 @@ export default function Navigation() {
             <span className="text-xl font-bold text-foreground">
               Ayokunle Ogunfidodo
             </span>
-            <div className="flex items-center space-x-4">
-              {navItems.map(({ id, label, icon: Icon }) => (
+            <div className="flex items-center gap-7">
+              {navItems.map(({ id, label }) => (
                 <a
                   key={id}
                   href={`#${id}`}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  className={`text-xs uppercase tracking-wider font-medium pb-1 border-b-2 transition-colors
                     ${
                       activeSection === id
-                        ? "text-primary-foreground bg-primary"
-                        : "text-foreground hover:text-primary"
+                        ? "text-primary border-primary"
+                        : "text-muted-foreground border-transparent hover:text-primary"
                     }`}
                 >
-                  {<Icon size={20} />} {label}
+                  {label}
                 </a>
               ))}
               <ThemeToggle />

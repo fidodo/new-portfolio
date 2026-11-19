@@ -1,11 +1,15 @@
 import "./globals.css";
 import ChatWidget from "./components/ChatWidget";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import HydrationWrapper from "./components/HydrationWrapper";
 import { Analytics } from "@vercel/analytics/next";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
   title: "Ayokunle Ogunfidodo's - Portfolio",
@@ -30,7 +34,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} antialiased`}>
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} ${inter.className} antialiased`}
+      >
         {" "}
         <HydrationWrapper>{children} </HydrationWrapper>
         <ChatWidget />
