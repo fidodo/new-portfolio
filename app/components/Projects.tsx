@@ -9,7 +9,6 @@ import {
   SiTailwindcss,
   SiReact,
   SiJavascript,
-  SiBootstrap,
   SiPostgresql,
   SiVite,
   SiAstro,
@@ -23,7 +22,7 @@ import {
 } from "react-icons/si";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import type { IconType } from "react-icons";
-import { TbBrandFramer, TbChartBar, TbScan } from "react-icons/tb";
+import { TbBrandFramer } from "react-icons/tb";
 import { staggerContainer, cardHover } from "../lib/motion";
 
 // ============ TYPES ============
@@ -54,7 +53,6 @@ const TECH_CONFIG: Record<string, TechConfig> = {
   "Tailwind CSS": { icon: SiTailwindcss, color: "#06B6D4", bgOpacity: 0.15 },
   React: { icon: SiReact, color: "#61DAFB", bgOpacity: 0.15 },
   Javascript: { icon: SiJavascript, color: "#F7DF1E", bgOpacity: 0.15 },
-  Bootstrap: { icon: SiBootstrap, color: "#7952B3", bgOpacity: 0.15 },
   PostgreSQL: { icon: SiPostgresql, color: "#4169E1", bgOpacity: 0.15 },
   recharts: { icon: SiChartdotjs, color: "#22B5BF", bgOpacity: 0.15 },
   Vite: { icon: SiVite, color: "#646CFF", bgOpacity: 0.15 },
@@ -66,8 +64,6 @@ const TECH_CONFIG: Record<string, TechConfig> = {
   "Gemini API": { icon: SiGooglegemini, color: "#8E75B2", bgOpacity: 0.15 },
   Express: { icon: SiExpress, color: "#000000", bgOpacity: 0.1 },
   Prisma: { icon: SiPrisma, color: "#2D3748", bgOpacity: 0.12 },
-  "react-charts": { icon: TbChartBar, color: "#FF6384", bgOpacity: 0.15 },
-  "tesseract.js": { icon: TbScan, color: "#5C6BC0", bgOpacity: 0.15 },
 };
 
 const PROJECTS: readonly Project[] = [
@@ -104,33 +100,14 @@ const PROJECTS: readonly Project[] = [
   },
   {
     id: "renewal-guard",
-
     title: "Renewal Guard",
     description:
       "A license renewal tracker built with Next.js and Tailwind CSS.",
+    impact:
+      "Deployed and live: automated renewal reminders and status tracking for real subscription management, not just a demo.",
     tech: ["Next.js", "TypeScript", "Tailwind CSS"] as const,
     link: "https://renewal-guard.vercel.app/",
     image: "/projects/renewal-guard.png",
-    year: 2026,
-  },
-  {
-    id: "spending-tracker",
-    title: "Spending Tracker App",
-    description:
-      "A personal finance tracker to monitor monthly expenses, loans, bills and budgets.",
-    impact:
-      "Built receipt OCR (tesseract.js) and interactive spending charts from scratch for real personal use, not a tutorial clone.",
-    tech: [
-      "React",
-      "Javascript",
-      "Bootstrap",
-      "PostgreSQL",
-      "react-charts",
-      "tesseract.js",
-    ] as const,
-    link: "https://github.com/fidodo/spending-tracker",
-    image: "/projects/monthly-spending.webp",
-    github: "https://github.com/fidodo/spending-tracker",
     featured: true,
     year: 2026,
   },
