@@ -11,6 +11,7 @@ import {
   Mail,
   Globe,
 } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
   const [activeSection, setActiveSection] = useState("home");
@@ -55,10 +56,8 @@ export default function Navigation() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed w-full z-50 transition-all duration-300 border-white/20 border-b hidden md:block ${
-          isScrolled
-            ? "bg-white/80 backdrop-blur-sm shadow-lg dark:bg-gray-900/80"
-            : "bg-transparent"
+        className={`fixed w-full z-50 transition-all duration-300 border-border border-b hidden md:block ${
+          isScrolled ? "bg-card/80 backdrop-blur-sm shadow-lg" : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -81,15 +80,25 @@ export default function Navigation() {
                   {<Icon size={20} />} {label}
                 </a>
               ))}
+              <ThemeToggle />
             </div>
           </div>
         </div>
       </motion.nav>
 
+      {/* Mobile top bar: brand + theme toggle (bottom bar below handles section nav) */}
+      <div className="fixed top-0 left-0 right-0 z-50 md:hidden flex items-center justify-between h-14 px-4 bg-card/90 backdrop-blur-md border-b border-border">
+        <span className="text-base font-bold text-foreground">
+          Ayokunle Ogunfidodo
+        </span>
+        <ThemeToggle />
+      </div>
+      <div className="h-14 md:hidden" />
+
       <motion.nav
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/90 backdrop-blur-md border-t border-gray-200 dark:bg-gray-900/90 dark:border-gray-800 shadow-lg"
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/90 backdrop-blur-md border-t border-border shadow-lg"
       >
         <div className="flex justify-around items-center h-16 px-2">
           {navItems.map(({ id, label, icon: Icon }) => (
@@ -99,8 +108,8 @@ export default function Navigation() {
               className={`flex flex-col items-center justify-center px-2 py-1 rounded-md transition-colors relative
                 ${
                   activeSection === id
-                    ? "text-primary dark:text-primary-on-dark"
-                    : "text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-on-dark"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
                 }`}
             >
               {activeSection === id && (

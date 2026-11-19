@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import * as HeroIcons from "@heroicons/react/24/outline";
+import { fadeUp, fadeUpDelayed } from "../lib/motion";
 
 const skills = {
   frontend: [
@@ -28,11 +29,12 @@ const skills = {
   ],
   devops: [
     {
-      name: "CI/CD (GitHub Actions, Docker)",
+      name: "CI/CD (GitHub Actions)",
       level: "Intermediate",
       icon: "ArrowPathIcon",
     },
-    { name: "AWS", level: "Beginner", icon: "CloudIcon" },
+    { name: "Docker", level: "Intermediate", icon: "CubeTransparentIcon" },
+    { name: "AWS", level: "Intermediate", icon: "CloudIcon" },
     {
       name: "GCP",
       level: "Beginner",
@@ -73,6 +75,25 @@ const skills = {
       status:
         "in progress (~50% through DataCamp's Associate AI Engineer for Developers track)",
     },
+    {
+      name: "Vector Databases (Pinecone)",
+      level: "Intermediate",
+      icon: "CircleStackIcon",
+    },
+  ],
+  "Testing & Quality": [
+    { name: "Jest", level: "Intermediate", icon: "BeakerIcon" },
+    {
+      name: "React Testing Library",
+      level: "Intermediate",
+      icon: "CheckBadgeIcon",
+    },
+    { name: "WCAG Accessibility", level: "Advanced", icon: "EyeIcon" },
+    {
+      name: "Lighthouse / Core Web Vitals",
+      level: "Advanced",
+      icon: "ChartBarIcon",
+    },
   ],
 };
 
@@ -80,9 +101,9 @@ export default function Skills() {
   return (
     <section id="skills" className="section">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
         className="max-w-5xl mx-auto"
       >
         <h2 className="heading text-center mb-2">Skills & Expertise</h2>
@@ -94,12 +115,12 @@ export default function Skills() {
           {Object.entries(skills).map(([category, items], categoryIndex) => (
             <motion.div
               key={category}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
-              className="p-5 bg-card dark:bg-[#1a1a1a] rounded-xl shadow-md border border-border dark:border-[#2a2a2a]"
+              variants={fadeUpDelayed(categoryIndex * 0.2)}
+              initial="hidden"
+              animate="visible"
+              className="p-5 bg-card rounded-xl shadow-md border border-border"
             >
-              <h3 className="text-lg font-semibold text-primary dark:text-primary-on-dark mb-4 capitalize">
+              <h3 className="text-lg font-semibold text-primary mb-4 capitalize">
                 {category}
               </h3>
               <ul className="space-y-3">
@@ -117,11 +138,11 @@ export default function Skills() {
                         {Icon && (
                           <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         )}
-                        <span className="font-medium text-gray-800 dark:text-gray-100">
+                        <span className="font-medium text-card-foreground">
                           {skill.name}
                         </span>
                       </div>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="text-sm text-muted-foreground">
                         {skill.level}
                       </span>
                     </motion.li>

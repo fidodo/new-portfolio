@@ -47,3 +47,10 @@ next-env.d.ts
 prisma/*.db
 prisma/*.db-journal
 .vercel
+
+# Playwright MCP debug artifacts
+.playwright-mcp/
+
+# Claude Code's local skill symlinks (absolute, machine-specific paths —
+# .agents/skills/ and skills-lock.json are the portable, committed parts)
+.claude/skills/

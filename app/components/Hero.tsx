@@ -3,20 +3,35 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { ArrowDown } from "lucide-react";
 
 export default function Hero() {
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
+  const avatarRef = useRef(null);
 
   useEffect(() => {
     if (!titleRef.current || !subtitleRef.current) return;
     const tl = gsap.timeline();
-    tl.from(titleRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      ease: "power3.out",
-    }).from(
+    if (avatarRef.current) {
+      tl.from(avatarRef.current, {
+        opacity: 0,
+        scale: 0.85,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+    }
+    tl.from(
+      titleRef.current,
+      {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        ease: "power3.out",
+      },
+      avatarRef.current ? "-=0.4" : undefined,
+    ).from(
       subtitleRef.current,
       {
         opacity: 0,
@@ -31,7 +46,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="section min-h-screen flex items-center justify-center"
+      className="section min-h-screen flex items-center justify-center relative"
     >
       <div className="text-center max-w-4xl px-6">
         <motion.div
@@ -42,6 +57,22 @@ export default function Hero() {
             staggerChildren: 0.2,
           }}
         >
+          <div
+            ref={avatarRef}
+            className="relative mx-auto mb-8 h-32 w-32 md:h-40 md:w-40"
+          >
+            <div className="relative h-full w-full overflow-hidden rounded-full ring-4 ring-primary/25 shadow-xl">
+              <Image
+                src="/profile.png"
+                alt="Portrait of Ayokunle Ogunfidodo"
+                fill
+                sizes="160px"
+                priority
+                className="object-cover grayscale-[15%] contrast-[1.05] saturate-[0.9]"
+              />
+            </div>
+          </div>
+
           <motion.h1
             className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
             initial={{ opacity: 0, y: 50 }}
@@ -61,7 +92,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.p
-            className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed"
+            className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -83,9 +114,25 @@ export default function Hero() {
             <a href="#contact" className="button button-secondary">
               Get in Touch
             </a>
+
+            <a
+              href="/resume.pdf"
+              download
+              className="button button-secondary"
+            >
+              Download Resume
+            </a>
           </motion.div>
         </motion.div>
       </div>
+
+      <a
+        href="#about"
+        aria-label="Scroll to About section"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-secondary-foreground/60 hover:text-primary transition-colors animate-bounce"
+      >
+        <ArrowDown className="h-5 w-5" />
+      </a>
     </section>
   );
 }

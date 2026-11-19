@@ -1,14 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { fadeUp } from "../lib/motion";
 
 export default function About() {
   return (
     <section id="about" className="section">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
         className="max-w-4xl mx-auto"
       >
         <h2 className="heading">About Me</h2>

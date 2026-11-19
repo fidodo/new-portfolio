@@ -18,11 +18,13 @@ import {
   SiPostcss,
   SiChartdotjs,
   SiGooglegemini,
+  SiExpress,
+  SiPrisma,
 } from "react-icons/si";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import type { IconType } from "react-icons";
-import { TbBrandFramer } from "react-icons/tb";
-import { Variants } from "framer-motion";
+import { TbBrandFramer, TbChartBar, TbScan } from "react-icons/tb";
+import { staggerContainer, cardHover } from "../lib/motion";
 
 // ============ TYPES ============
 interface Project {
@@ -61,9 +63,32 @@ const TECH_CONFIG: Record<string, TechConfig> = {
   Strapi: { icon: SiStrapi, color: "#D53F8C", bgOpacity: 0.15 },
   Scss: { icon: SiPostcss, color: "#CB6699", bgOpacity: 0.15 },
   "Gemini API": { icon: SiGooglegemini, color: "#8E75B2", bgOpacity: 0.15 },
+  Express: { icon: SiExpress, color: "#000000", bgOpacity: 0.1 },
+  Prisma: { icon: SiPrisma, color: "#2D3748", bgOpacity: 0.12 },
+  "react-charts": { icon: TbChartBar, color: "#FF6384", bgOpacity: 0.15 },
+  "tesseract.js": { icon: TbScan, color: "#5C6BC0", bgOpacity: 0.15 },
 };
 
 const PROJECTS: readonly Project[] = [
+  {
+    id: "interviewpal",
+    title: "InterviewPal",
+    description:
+      "An AI-powered interview-prep platform: practice technical interviews by voice or code with instant AI scoring, target-role mock interviews, a system-design canvas, and a RAG Lab for building and grading your own retrieval chatbot.",
+    tech: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Express",
+      "Prisma",
+      "PostgreSQL",
+    ] as const,
+    link: "https://client-beige-mu-26.vercel.app/login",
+    image: "/projects/interviewpal.png",
+    github: "https://github.com/fidodo/interviewpal",
+    featured: true,
+    year: 2026,
+  },
   {
     id: "portfolio",
     title: "Portfolio Website",
@@ -142,30 +167,6 @@ const PROJECTS: readonly Project[] = [
 ] as const;
 
 // ============ ANIMATION VARIANTS ============
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
-  },
-  hover: {
-    y: -8,
-    transition: { duration: 0.3, ease: "easeOut" },
-  },
-};
-
 const statusVariants = {
   hidden: { scale: 0, opacity: 0 },
   visible: { scale: 1, opacity: 1 },
@@ -196,7 +197,7 @@ const TechBadge = memo(({ tech }: { tech: string }) => {
       title={tech}
     >
       <Icon className="w-3.5 h-3.5" style={{ color }} />
-      <span className="text-gray-700 dark:text-gray-300">{tech}</span>
+      <span className="text-card-foreground">{tech}</span>
     </motion.span>
   );
 });
@@ -205,14 +206,14 @@ TechBadge.displayName = "TechBadge";
 
 const ProjectLinks = memo(
   ({ link, github }: Pick<Project, "link" | "github">) => (
-    <div className="flex items-center justify-between pt-2 border-t border-border dark:border-[#2a2a2a]">
+    <div className="flex items-center justify-between pt-2 border-t border-border">
       <motion.a
         href={link}
         target="_blank"
         rel="noopener noreferrer"
         whileHover={{ x: 5 }}
         whileTap={{ scale: 0.95 }}
-        className="inline-flex items-center gap-2 text-primary hover:text-primary/80 dark:text-primary-on-dark dark:hover:text-primary-on-dark/80 font-medium transition-colors group/link"
+        className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors group/link"
       >
         <span>View Project</span>
         <FiExternalLink className="w-4 h-4 transition-all duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
@@ -228,7 +229,7 @@ const ProjectLinks = memo(
           className="p-2 bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors"
           aria-label="View Source Code"
         >
-          <FiGithub className="w-5 h-5 text-primary dark:text-primary-on-dark" />
+          <FiGithub className="w-5 h-5 text-primary" />
         </motion.a>
       )}
     </div>
@@ -288,14 +289,14 @@ export default function Projects() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
             Featured Projects
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Some of my recent work
           </p>
         </motion.div>
 
         {/* Projects Grid */}
         <motion.div
-          variants={containerVariants}
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
@@ -304,12 +305,12 @@ export default function Projects() {
           {sortedProjects.map((project) => (
             <motion.article
               key={project.id}
-              variants={itemVariants}
+              variants={cardHover}
               whileHover="hover"
-              className="group relative bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md border border-gray-200 dark:border-[#2a2a2a] hover:shadow-xl transition-all duration-300 overflow-hidden focus-within:ring-2 focus-within:ring-primary/50"
+              className="group relative bg-card rounded-xl shadow-md border border-border hover:shadow-xl transition-all duration-300 overflow-hidden focus-within:ring-2 focus-within:ring-primary/50"
             >
               {/* Image Container */}
-              <div className="relative w-full h-48 md:h-56 overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <div className="relative w-full h-48 md:h-56 overflow-hidden bg-muted">
                 <Image
                   src={
                     project.image ? project.image : "/projects/fallback.webp"
@@ -337,7 +338,7 @@ export default function Projects() {
                   whileInView={{ opacity: 1, y: 0 }}
                   className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
                 >
-                  <span className="bg-white dark:bg-gray-900 text-primary dark:text-primary-on-dark px-5 py-2.5 rounded-full text-sm font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                  <span className="bg-card text-primary px-5 py-2.5 rounded-full text-sm font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                     Live Preview →
                   </span>
                 </motion.a>
@@ -345,11 +346,11 @@ export default function Projects() {
 
               {/* Content */}
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-primary dark:text-primary-on-dark mb-2 line-clamp-1">
+                <h3 className="text-xl font-semibold text-primary mb-2 line-clamp-1">
                   {project.title}
                 </h3>
 
-                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 leading-relaxed text-sm">
+                <p className="text-card-foreground/80 mb-4 line-clamp-3 leading-relaxed text-sm">
                   {project.description}
                 </p>
 

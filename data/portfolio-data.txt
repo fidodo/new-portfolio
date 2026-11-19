@@ -4,9 +4,11 @@
 I'm a full-stack developer with 5+ years shipping production React, Next.js, and Node.js platforms. I've been working at STR Global Oy from 2021-2026, building real-time operational dashboards. I have an MSc in Human-Technology Interaction, which means I focus on interfaces that are fast, accessible, and genuinely usable.
 
 ## Skills
-Frontend: React (Advanced), Next.js (Advanced), TypeScript (Advanced), Tailwind CSS (Advanced)
-Backend: Node.js (Intermediate), GraphQL (Intermediate), PostgreSQL (Intermediate)
-AI/ML: OpenAI API (Intermediate), Prompt Engineering (Intermediate), Hugging Face (Intermediate), LangChain (Intermediate)
+Frontend: React (Advanced), Next.js (Advanced), TypeScript (Advanced), Tailwind CSS (Advanced), Vite (Advanced)
+Backend: Node.js (Intermediate), Express.js (Intermediate), GraphQL (Intermediate), PostgreSQL (Intermediate), Prisma (Intermediate), Zod (Intermediate)
+DevOps: CI/CD with GitHub Actions (Intermediate), Docker (Intermediate), AWS (Intermediate), GCP (Beginner)
+Testing & Quality: Jest (Intermediate), React Testing Library (Intermediate), WCAG Accessibility (Advanced), Lighthouse / Core Web Vitals (Advanced)
+AI/ML: OpenAI API (Intermediate), Prompt Engineering (Intermediate), Hugging Face (Intermediate), LangChain (Intermediate), Vector Databases/Pinecone (Intermediate), LLMOps (in progress), multi-provider LLM integration (Groq/Gemini, shipped in InterviewPal)
 
 ## Projects
 1. Renewal Guard: A license renewal tracker built with Next.js and Tailwind CSS. Features include automated reminders, status tracking, and user authentication.
@@ -19,15 +21,23 @@ AI/ML: OpenAI API (Intermediate), Prompt Engineering (Intermediate), Hugging Fac
 
 5. AlhmanEdu Green Fields: A blog platform built with Strapi CMS in the backend and React in the frontend.
 
+6. InterviewPal: An AI-powered technical interview practice platform (live at client-beige-mu-26.vercel.app, source at github.com/fidodo/interviewpal). Lets users practice interviews by voice or code with instant AI scoring, run target-role mock interviews, use a system-design canvas, and build/grade their own RAG chatbot in a "RAG Lab". Built with React, Vite, TypeScript on the frontend and Express, Prisma, PostgreSQL on the backend, orchestrating multiple LLM providers (Groq, Gemini) behind one interface.
+
 ## Experience
-STR Global Oy (2021-2026): Full Stack Web Developer. Built and enhanced internal OMS and WMS applications, improving operational efficiency and user experience for internal teams.
+STR Global Oy (Jan 2021 - Jan 2026): Frontend & Full-Stack Developer. Built and scaled Next.js real-time dashboards and operational workflows for a telemarketing Order Management System (order lifecycle tracking, CSV exports, fraud blacklisting, payment gateway integration), improving team efficiency 2x. Improved CI/CD and Dockerized services, cutting release cycles ~40%, with 85%+ test coverage (Jest + React Testing Library) and WCAG-compliant interfaces.
 
-Kasvuhuoneilmiö × AhlmanEdu (2026): Innovation Program Participant. Collaborated in a multidisciplinary team to design community-focused experiences. Built a CMS-driven platform using React and Strapi.
+Freelance (Jan 2018-Present): Full-Stack & UX/UI Developer. Designed and built full-stack SaaS applications and AI-powered products end-to-end, including InterviewPal and an AI Resume Assistant, using React, Next.js, Node.js, Astro, and Strapi CMS. Consistently achieved 90-95+ Lighthouse scores; led UX research and prototyping in Figma.
 
-Freelance (2018-Present): Web Developer and UI/UX Designer. Designed and developed websites using React, Next.js, and Astro with focus on responsive design and performance.
+Kasvuhuoneilmiö × AhlmanEdu (Jan 2026, 5-week program): Innovation Program Participant. Collaborated in a multidisciplinary team to design community-focused experiences. Built a CMS-driven platform using React and Strapi.
+
+ICT4N Internship, Tampere University (Jan 2021 - Jan 2022): Developed full-stack research tools and improved accessibility/usability of analytics dashboards for academic and operational use.
+
+Lean Entries (Jan 2018): UX/UI Designer. Redesigned onboarding flows and UI systems for regulatory SaaS tools.
 
 ## Education
 MSc in Human-Technology Interaction - Focus on usability, accessibility, and user-centered design principles.
+
+Bsc in Information Technology - Focus on Embedded systems, networking.
 
 ## Current Focus
 Currently expanding into AI engineering through DataCamp's Associate AI Engineer for Developers track, learning about OpenAI API, LangChain, Hugging Face, and LLMOps. The goal is to build AI-powered features on top of a full-stack foundation.
