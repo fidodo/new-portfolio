@@ -23,6 +23,7 @@ import {
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { TbBrandFramer } from "react-icons/tb";
+import { Sparkles } from "lucide-react";
 import { staggerContainer, cardHover } from "../lib/motion";
 
 // ============ TYPES ============
@@ -149,13 +150,6 @@ const PROJECTS: readonly Project[] = [
   },
 ] as const;
 
-// ============ ANIMATION VARIANTS ============
-const statusVariants = {
-  hidden: { scale: 0, opacity: 0 },
-  visible: { scale: 1, opacity: 1 },
-  hover: { scale: 1.05 },
-};
-
 // ============ SUB-COMPONENTS ============
 const TechBadge = memo(({ tech }: { tech: string }) => {
   const config = TECH_CONFIG[tech];
@@ -198,7 +192,7 @@ const ProjectLinks = memo(
         whileTap={{ scale: 0.95 }}
         className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors group/link"
       >
-        <span>View Project</span>
+        <span>View live site</span>
         <FiExternalLink className="w-4 h-4 transition-all duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
       </motion.a>
 
@@ -220,23 +214,6 @@ const ProjectLinks = memo(
 );
 
 ProjectLinks.displayName = "ProjectLinks";
-
-const StatusBadge = memo(
-  ({ status }: { status: NonNullable<Project["status"]> }) => (
-    <motion.div
-      variants={statusVariants}
-      initial="hidden"
-      animate="visible"
-      whileHover="hover"
-      className="absolute top-3 right-3 px-3 py-1.5 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full text-xs font-medium shadow-lg z-10 backdrop-blur-sm"
-      title={`Status: ${status}`}
-    >
-      {status}
-    </motion.div>
-  ),
-);
-
-StatusBadge.displayName = "StatusBadge";
 
 const SecondaryProjectRow = memo(({ project }: { project: Project }) => (
   <a
@@ -282,6 +259,97 @@ const SecondaryProjectRow = memo(({ project }: { project: Project }) => (
 ));
 
 SecondaryProjectRow.displayName = "SecondaryProjectRow";
+
+const FeaturedProjectRow = memo(
+  ({
+    project,
+    reversed,
+    onImageError,
+  }: {
+    project: Project;
+    reversed: boolean;
+    onImageError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+  }) => {
+    let hostname = project.link;
+    try {
+      hostname = new URL(project.link).hostname;
+    } catch {
+      // link isn't a full URL (shouldn't happen for featured projects); fall
+      // back to showing it as-is rather than throwing.
+    }
+
+    return (
+      <motion.article
+        variants={cardHover}
+        className="grid md:grid-cols-2 gap-8 md:gap-12 items-center"
+      >
+        {/* Browser-chrome mockup: grounds the screenshot as a real, live
+            site rather than a decorative thumbnail. */}
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Open ${project.title} (${hostname})`}
+          className={`group block rounded-lg border border-border overflow-hidden bg-card hover:border-primary/50 transition-colors ${
+            reversed ? "md:order-2" : ""
+          }`}
+        >
+          <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border">
+            <span className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+            <span className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+            <span className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+            <span className="ml-2 text-xs text-muted-foreground truncate">
+              {hostname}
+            </span>
+          </div>
+          <div className="relative w-full h-56 md:h-64 bg-muted">
+            <Image
+              src={project.image ? project.image : "/projects/fallback.webp"}
+              alt={`${project.title} project preview`}
+              fill
+              className="object-cover object-top"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+              onError={onImageError}
+            />
+          </div>
+        </a>
+
+        <div className={reversed ? "md:order-1" : ""}>
+          <h3 className="text-2xl font-bold mb-2">
+            {project.title}
+            {project.status && (
+              <span className="ml-2 text-sm font-normal text-muted-foreground">
+                · {project.status}
+              </span>
+            )}
+          </h3>
+
+          <p className="text-card-foreground/80 mb-3 leading-relaxed">
+            {project.description}
+          </p>
+
+          {project.impact && (
+            <p className="flex items-start gap-2 text-sm text-foreground mb-5">
+              <Sparkles className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              <span>{project.impact}</span>
+            </p>
+          )}
+
+          <div className="flex flex-wrap gap-2 mb-5">
+            {project.tech.map((tech) => (
+              <TechBadge key={tech} tech={tech} />
+            ))}
+          </div>
+
+          <ProjectLinks link={project.link} github={project.github} />
+        </div>
+      </motion.article>
+    );
+  },
+);
+
+FeaturedProjectRow.displayName = "FeaturedProjectRow";
 
 // ============ MAIN COMPONENT ============
 export default function Projects() {
@@ -331,79 +399,15 @@ export default function Projects() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid md:grid-cols-2 gap-8"
+          className="space-y-16 md:space-y-20"
         >
-          {featuredProjects.map((project) => (
-            <motion.article
+          {featuredProjects.map((project, index) => (
+            <FeaturedProjectRow
               key={project.id}
-              variants={cardHover}
-              whileHover="hover"
-              className="group relative bg-card rounded-xl shadow-md border border-border hover:shadow-xl transition-all duration-300 overflow-hidden focus-within:ring-2 focus-within:ring-primary/50"
-            >
-              {/* Image Container */}
-              <div className="relative w-full h-48 md:h-56 overflow-hidden bg-muted">
-                <Image
-                  src={
-                    project.image ? project.image : "/projects/fallback.webp"
-                  }
-                  alt={`${project.title} project preview`}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority={project.featured}
-                  onError={handleImageError}
-                />
-
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                {/* Quick View Button */}
-                <motion.a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  animate={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
-                >
-                  <span className="bg-card text-primary px-5 py-2.5 rounded-full text-sm font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    Live Preview →
-                  </span>
-                </motion.a>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-primary mb-2 line-clamp-1">
-                  {project.title}
-                </h3>
-
-                <p className="text-card-foreground/80 mb-2 line-clamp-3 leading-relaxed text-sm">
-                  {project.description}
-                </p>
-
-                {project.impact && (
-                  <p className="text-sm text-primary/90 italic mb-4">
-                    {project.impact}
-                  </p>
-                )}
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((tech) => (
-                    <TechBadge key={tech} tech={tech} />
-                  ))}
-                </div>
-
-                <ProjectLinks link={project.link} github={project.github} />
-              </div>
-
-              {/* Status Badge */}
-              {project.status && <StatusBadge status={project.status} />}
-            </motion.article>
+              project={project}
+              reversed={index % 2 === 1}
+              onImageError={handleImageError}
+            />
           ))}
         </motion.div>
 
